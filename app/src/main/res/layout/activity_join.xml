@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.deni.chartcollaboration.JoinActivity">
+
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart1"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/chart_id" />
+
+    <EditText
+        android:id="@+id/editX"
+        android:layout_width="50dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="34dp"
+        android:layout_marginRight="34dp"
+        android:layout_toLeftOf="@+id/editY"
+        android:layout_toStartOf="@+id/editY"
+        android:hint="X"
+        android:inputType="number"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/editY"
+        android:layout_width="70dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="27dp"
+        android:layout_marginRight="27dp"
+        android:hint="Y"
+        android:inputType="number"
+        android:visibility="invisible" />
+
+
+    <EditText
+        android:id="@+id/chart_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="0"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_toEndOf="@+id/chart_id"
+        android:layout_toRightOf="@+id/chart_id"
+        android:text="0"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/button_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/chart1"
+        android:text="Add"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chart1"
+        android:layout_toEndOf="@+id/button_add"
+        android:layout_toRightOf="@+id/button_add"
+        android:text="Del"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button_Author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chart1"
+        android:layout_toEndOf="@+id/button_add"
+        android:layout_toRightOf="@+id/button_add"
+        android:text="Edit Chart" />
+
+    <Button
+        android:id="@+id/button_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button_back"
+        android:layout_alignBottom="@+id/button_back"
+        android:layout_toLeftOf="@+id/button_back"
+        android:layout_toStartOf="@+id/button_back"
+        android:text="Play" />
+
+    <Button
+        android:id="@+id/button_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/chart1"
+        android:text="Back"
+        tools:layout_editor_absoluteX="95dp"
+        tools:layout_editor_absoluteY="231dp" />
+
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button_Author"
+        android:layout_marginTop="29dp"
+        android:visibility="invisible" />
+
+
+
+</RelativeLayout>
