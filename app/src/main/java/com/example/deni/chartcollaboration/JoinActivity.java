@@ -119,6 +119,17 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 //
 //    }
 
+    @OnClick(R.id.button_refresh)
+    public void refresh(){
+
+        writeTable();
+        loadDataMahasiswa();
+        /// code to update data then notify Adapter
+        viewAdapter.notifyDataSetChanged();
+
+
+    }
+
     @OnClick(R.id.button_Author)
     public void author(){
 //        Log.v("ini jalan","jajajaj");

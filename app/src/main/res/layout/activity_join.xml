@@ -132,6 +132,14 @@
         android:layout_marginTop="29dp"
         android:visibility="invisible" />
 
+    <Button
+        android:id="@+id/button_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chart1"
+        android:layout_toLeftOf="@+id/button_play"
+        android:layout_toStartOf="@+id/button_play"
+        android:text="Refresh" />
 
 
 </RelativeLayout>
