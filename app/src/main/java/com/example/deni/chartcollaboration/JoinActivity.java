@@ -292,7 +292,6 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
                 });
 
 
-
             }
 
 //            @Override
