@@ -170,7 +170,18 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         mChart.setDrawGridBackground(false);
         mChart.setDescription("");
 
-        // add an empty data object
+// -- ini ---
+//        mChart.setDragEnabled(true);
+//        mChart.setScaleEnabled(true);
+//
+//        YAxis leftAxis = mChart.getAxisLeft();
+//        leftAxis.removeAllLimitLines();
+//        leftAxis.setAxisMaxValue(220f);
+//        leftAxis.setAxisMaxValue(-50);
+//        // add an empty data object
+
+// ---- baru
+
         mChart.setData(new LineData());
         mChart.setScaleEnabled(false);
 
