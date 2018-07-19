@@ -121,7 +121,8 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
     @OnClick(R.id.button_refresh)
     public void refresh(){
-
+//        removeDataSet();
+        removeAllSet();
         writeTable();
         loadDataMahasiswa();
         /// code to update data then notify Adapter
@@ -390,7 +391,7 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
                         //                    String data = "[{\"jk\":\"Laki - Laki\",\"jurusan\":\"\",\"nama\":\"\",\"nim\":\"0\"}, {\"jk\":\"Perempuan\",\"jurusan\":\"Teknik Informatika\",\"nama\":\"1\",\"nim\":\"151524001\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"System Informasi1\",\"nama\":\"2\",\"nim\":\"151524029\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"Kedokteran\",\"nama\":\"3\",\"nim\":\"151524030\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"Ilmu Komputer\",\"nama\":\"4\",\"nim\":\"151524088\"}]";
                         String data = new Gson().toJson(response.body().getResult()).toString();
-                        Log.v("data nya @@ : ", data);
+//                        Log.v("data nya @@ : ", data);
 
                         //[{"jk":"Perempuan","jurusan":"Teknik Informatika","nama":"1","nim":"151524001"},
                         // {"jk":"Laki - Laki","jurusan":"System Informasi1","nama":"2","nim":"151524029"},
@@ -562,6 +563,38 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
         if(data != null) {
 
+            ILineDataSet set = data.getDataSetByIndex(0);
+            Entry e = set.getEntryForXIndex(set.getEntryCount() - 1);
+
+            Log.d("datasetnya @@", String.valueOf(data.getDataSetByIndex(0).getEntryCount()));
+//            Log.d("datanya @@", String.valueOf(data.getDataSetByIndex(data.getDataSetCount() - 1)));
+
+            data.removeDataSet(data.getDataSetByIndex(data.getDataSetCount() - 1));
+
+            mChart.notifyDataSetChanged();
+            mChart.invalidate();
+        }
+    }
+
+    private void removeAllSet() {
+
+        LineData data = mChart.getData();
+
+        if(data != null) {
+
+//            ILineDataSet set = data.getDataSetByIndex(0);
+//            Entry e = set.getEntryForXIndex(set.getEntryCount() - 1);
+
+            Log.d("datasetnya @@", String.valueOf(data.getDataSetByIndex(0).getEntryCount()));
+//            Log.d("datanya @@", String.valueOf(data.getDataSetByIndex(data.getDataSetCount() - 1)));
+
+            for(int i=1;i<=data.getDataSetByIndex(0).getEntryCount();i++){
+
+                removeLastEntry();
+
+            }
+
+            // untuk menghapus dataset
             data.removeDataSet(data.getDataSetByIndex(data.getDataSetCount() - 1));
 
             mChart.notifyDataSetChanged();

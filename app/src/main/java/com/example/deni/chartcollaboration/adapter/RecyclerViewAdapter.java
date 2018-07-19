@@ -63,9 +63,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @BindView(R.id.textChartId)TextView textViewChartId;
         @BindView(R.id.textCategory)TextView textViewCategory;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView) { // main nya
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this, itemView); // harus di deklarasikan butter knifenya
             itemView.setOnClickListener(this);
         }
 

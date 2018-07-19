@@ -26,6 +26,8 @@
         android:layout_toStartOf="@+id/editY"
         android:hint="X"
         android:inputType="number"
+        android:text="0"
+        android:visibility="invisible"
         />
 
     <EditText

@@ -19,7 +19,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".CreateActivity" />
-        <activity android:name=".JoinActivity"></activity>
+        <activity android:name=".JoinActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".WorkgroupActivity" />
+        <activity android:name=".WorkgroupAddActivity"></activity>
     </application>
 
 </manifest>

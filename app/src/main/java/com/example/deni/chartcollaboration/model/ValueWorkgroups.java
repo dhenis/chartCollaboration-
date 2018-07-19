@@ -3,24 +3,23 @@ package com.example.deni.chartcollaboration.model;
 import java.util.List;
 
 /**
- * Created by deni on 19/06/2018.
+ * Created by deni on 18/07/2018.
  */
 
-
-// usage for sending data from android TO API
-// result of API
-    //{"value":1,"result":[{"x":"1","y":"1","chart_id":"1","code":"1","category":"1","id":"1"}]}
-public class Value {
+public class ValueWorkgroups {
 
     String value;
+
     String message;
-    List<Charts> result;
+
+    List<Workgroups> result;
 
     public String getValue(){ return value;}
     public String getMessage(){
         return message;
     }
-    public List<Charts> getResult(){
+
+    public List<Workgroups> getWorkgroupResult(){
         return result;
     } // retrive when using all data
 

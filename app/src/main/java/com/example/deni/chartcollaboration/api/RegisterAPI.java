@@ -6,6 +6,8 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 import com.example.deni.chartcollaboration.model.Value;
+import com.example.deni.chartcollaboration.model.ValueWorkgroups;
+
 /**
  * Created by deni on 19/06/2018.
  */
@@ -37,9 +39,15 @@ public interface RegisterAPI {
     @POST ("view_last_chart.php")// input data android ke DB
     Call<Value> getLastValueFromChart( @Field("chart_id") String chart_id );
 
+    @FormUrlEncoded
+    @POST ("login.php")// input data android ke DB
+    Call<Value> getUsername( @Field("username") String username );
 
     @GET ("view_all.php")// input data android ke DB
     Call<Value> view_all();
+
+    @GET("view_workgroup.php")
+    Call<ValueWorkgroups> viewWorkgroup();
 
     @FormUrlEncoded
     @POST("search.php")
