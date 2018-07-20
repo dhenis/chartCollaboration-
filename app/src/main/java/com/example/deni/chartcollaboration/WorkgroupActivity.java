@@ -2,6 +2,7 @@ package com.example.deni.chartcollaboration;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,6 +57,19 @@ public class WorkgroupActivity extends AppCompatActivity {
         recyclerViewWg.setAdapter(workgroupAdapter);
         loadWorkgroup();
 
+    }
+
+    @OnClick(R.id.addWorkgroupButton)
+    public void create(){
+        Intent pindah = new Intent(WorkgroupActivity.this, WorkgroupAddActivity.class);
+        startActivityForResult(pindah,1);
+    }
+
+
+    @OnClick(R.id.backButtonWorkgroup)
+    public void back(){
+        Intent pindah = new Intent(WorkgroupActivity.this, MainActivity.class);
+        startActivityForResult(pindah,1);
     }
 
 

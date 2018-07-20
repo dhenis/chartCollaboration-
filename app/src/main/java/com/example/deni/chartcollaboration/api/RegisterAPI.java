@@ -6,6 +6,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 import com.example.deni.chartcollaboration.model.Value;
+import com.example.deni.chartcollaboration.model.ValueChartManager;
 import com.example.deni.chartcollaboration.model.ValueWorkgroups;
 
 /**
@@ -31,6 +32,22 @@ public interface RegisterAPI {
                        @Field("chart_id") String chart_id,
                        @Field("code") String code,
                        @Field("category") String category);
+
+    @FormUrlEncoded
+    @POST ("workgroup_add.php")// input data android ke DB
+    Call<ValueWorkgroups> addWorkgroup1(  @Field("name") String name,
+                                          @Field("access") String access);
+
+    @FormUrlEncoded
+    @POST ("chart_manager_add.php")// input data android ke DB
+    Call<ValueWorkgroups> addChartManager( @Field("name") String name,
+                                           @Field("status") String status);
+
+    @FormUrlEncoded
+    @POST ("workgroup_delete.php")// input data android ke DB
+    Call<ValueWorkgroups> deleteWorkgroup(@Field("name") String name);
+
+
     @FormUrlEncoded
     @POST ("view.php")// input data android ke DB
     Call<Value> view( @Field("chart_id") String chart_id );
@@ -48,6 +65,10 @@ public interface RegisterAPI {
 
     @GET("view_workgroup.php")
     Call<ValueWorkgroups> viewWorkgroup();
+
+    @GET("chat_manager_view.php")
+    Call<ValueChartManager> viewChartManager();
+
 
     @FormUrlEncoded
     @POST("search.php")

@@ -22,7 +22,9 @@
         <activity android:name=".JoinActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".WorkgroupActivity" />
-        <activity android:name=".WorkgroupAddActivity"></activity>
+        <activity android:name=".WorkgroupAddActivity" />
+        <activity android:name=".ChartManagerActivity" />
+        <activity android:name=".ChartManagerAddActivity"></activity>
     </application>
 
 </manifest>

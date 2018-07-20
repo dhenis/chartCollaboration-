@@ -11,34 +11,49 @@
         android:id="@+id/workgroupName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
         android:layout_marginTop="34dp"
         android:ems="10"
         android:hint="Workgroup Name"
         android:inputType="textPersonName" />
 
+    <TextView
+        android:id="@+id/accessCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/backButtonWorkgroup"
+        android:layout_marginTop="28dp"
+        android:layout_toEndOf="@+id/buttonAddWorkgroup"
+        android:layout_toRightOf="@+id/buttonAddWorkgroup"
+        android:text="Access Code" />
+
+
     <Button
         android:id="@+id/buttonAddWorkgroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/workgroupName"
-        android:layout_marginLeft="26dp"
-        android:layout_marginStart="26dp"
-        android:layout_toEndOf="@+id/workgroupName"
-        android:layout_toRightOf="@+id/workgroupName"
-        android:text="Create" />
-
-    <TextView
-        android:id="@+id/accessCode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/buttonAddWorkgroup"
-        android:layout_marginTop="25dp"
-        android:text="Access Code" />
+        android:layout_below="@+id/workgroupName"
+        android:layout_marginLeft="69dp"
+        android:layout_marginStart="69dp"
+        android:layout_marginTop="16dp"
+        android:text="Create" />
+
+    <Button
+        android:id="@+id/backButtonWorkgroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonAddWorkgroup"
+        android:layout_alignBottom="@+id/buttonAddWorkgroup"
+        android:layout_marginLeft="31dp"
+        android:layout_marginStart="31dp"
+        android:layout_toEndOf="@+id/buttonAddWorkgroup"
+        android:layout_toRightOf="@+id/buttonAddWorkgroup"
+        android:text="Back" />
+
 </RelativeLayout>
