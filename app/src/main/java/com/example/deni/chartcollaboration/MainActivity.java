@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.button_join)
     public void join(){
 //        Log.v("ini jalan","jajajaj");
-        Intent pindah = new Intent(MainActivity.this, WorkgroupActivity.class);
+        Intent pindah = new Intent(MainActivity.this, SearchActivity.class);
         pindah.putExtra("username",String.valueOf(" "));
         pindah.putExtra("id_account",String.valueOf(" "));
         pindah.putExtra("role","subscriber");

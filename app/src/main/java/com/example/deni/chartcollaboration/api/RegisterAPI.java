@@ -65,9 +65,6 @@ public interface RegisterAPI {
     @POST ("account_manager_delete.php")// input data android ke DB
     Call<ValueAccountManager> deleteAccountManagerById(@Field("account_id") String account_id );
 
-    @FormUrlEncoded
-    @POST ("chat_manager_view.php")// input data android ke DB
-    Call<ValueChartManager> viewChartManagerById( @Field("chart_id") String chart_id );
 
     @FormUrlEncoded
     @POST ("login.php")// input data android ke DB
@@ -85,6 +82,11 @@ public interface RegisterAPI {
     @POST ("view_workgroup_by_account_id.php")// input data android ke DB
     Call<ValueWorkgroups> viewChartManagerByUsername( @Field("account_id") String account_id );
 
+    @FormUrlEncoded
+    @POST ("acces_code_check.php")// input data android ke DB
+    Call<ValueWorkgroups> checkAccessCode( @Field("chart_id") String chart_id,
+                                           @Field("access") String access);
+
 
     @GET("chat_manager_view.php")
     Call<ValueChartManager> viewChartManager();
@@ -92,6 +94,13 @@ public interface RegisterAPI {
     @GET("chat_manager_view.php")
     Call<ValueChartManager> getLastChartId();
 
+    @FormUrlEncoded
+    @POST ("chat_manager_view.php")// input data android ke DB
+    Call<ValueChartManager> viewChartManagerById( @Field("chart_id") String chart_id );
+
+    @FormUrlEncoded
+    @POST ("view_chart_manager_by_id.php")// input data android ke DB
+    Call<ValueChartManager> searchChartById( @Field("chart_id") String chart_id );
 
     @FormUrlEncoded
     @POST("search.php")

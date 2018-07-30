@@ -133,9 +133,25 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
     @OnClick(R.id.button_Author)
     public void author(){
-//        Log.v("ini jalan","jajajaj");
-        Intent pindah = new Intent(JoinActivity.this, CreateActivity.class);
+
+//
+//         fungsi pindah
+        Intent pindah = new Intent(JoinActivity.this, AccessCodeActivity.class);
+
+        pindah.putExtra("username",String.valueOf(" "));
+        pindah.putExtra("id_account",String.valueOf(" "));
+        pindah.putExtra("role","subscriber");
+
+        String chart_id_var = chart_id.getText().toString();
+
+        pindah.putExtra("chartName", chart_id_var);
+
+        pindah.putExtra("chartId", chart_id_var);
+
         startActivityForResult(pindah,1);
+
+        Log.e("@aaa",chart_id_var);
+
     }
 
     @OnClick(R.id.button_back)
@@ -154,6 +170,11 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         ButterKnife.bind(this);
 
         writeTable();
+        Intent intent = getIntent();
+        String chartName = intent.getStringExtra("chartName");
+        String chartId = intent.getStringExtra("chartId");
+
+        chart_id.setText(chartId); // set chart id
 
         loadDataMahasiswa(); // panggil fungsi yang dibawah
 
