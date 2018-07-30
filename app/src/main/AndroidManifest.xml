@@ -24,7 +24,9 @@
         <activity android:name=".WorkgroupActivity" />
         <activity android:name=".WorkgroupAddActivity" />
         <activity android:name=".ChartManagerActivity" />
-        <activity android:name=".ChartManagerAddActivity"></activity>
+        <activity android:name=".ChartManagerAddActivity" />
+        <activity android:name=".AccountManagerActivity" />
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>

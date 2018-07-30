@@ -65,6 +65,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
     private List<Charts> chart_list  = new ArrayList<>(); // masukkan ke kelas chart dari API
     private RecyclerViewAdapter viewAdapter;
 
+
     @BindView(R.id.recycleView)RecyclerView recyclerView;
     @BindView(R.id.progress_bar)ProgressBar progressBar;
 
@@ -135,6 +136,13 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         ButterKnife.bind(this);
 
         writeTable();
+        //get intent
+        Intent intent = getIntent();
+        String chartName = intent.getStringExtra("chartName");
+        String chartId = intent.getStringExtra("chartId");
+
+        chart_id.setText(chartId); // set chart id
+        Log.d("##chart id##", chartId);
 
         loadDataMahasiswa(); // panggil fungsi yang dibawah
 
@@ -586,10 +594,15 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
         float volume= ((e.getVal()/(mChart.getYChartMax()-mChart.getYChartMin()))*5);
+
         //float volume= (e.getVal()/130)*5;
+
         mySound.play(raygunID, 1, 1, 1, 0, volume);
+
         Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

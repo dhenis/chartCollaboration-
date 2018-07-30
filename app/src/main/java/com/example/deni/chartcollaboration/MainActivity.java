@@ -11,20 +11,27 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
-    @OnClick(R.id.button_create)
-    public void create(){
-//        Log.v("ini jalan","jajajaj");
-        Intent pindah = new Intent(MainActivity.this, WorkgroupActivity.class);
-        startActivityForResult(pindah,1);
-    }
-
     @OnClick(R.id.button_join)
     public void join(){
 //        Log.v("ini jalan","jajajaj");
-        Intent pindah = new Intent(MainActivity.this, JoinActivity.class);
+        Intent pindah = new Intent(MainActivity.this, WorkgroupActivity.class);
+        pindah.putExtra("username",String.valueOf(" "));
+        pindah.putExtra("id_account",String.valueOf(" "));
+        pindah.putExtra("role","subscriber");
+
+
         startActivityForResult(pindah,1);
 
     }
+
+
+    @OnClick(R.id.button_create)
+    public void create(){
+//        Log.v("ini jalan","jajajaj");
+        Intent pindah = new Intent(MainActivity.this, LoginActivity.class);
+        startActivityForResult(pindah,1);
+    }
+
 
 
     @Override

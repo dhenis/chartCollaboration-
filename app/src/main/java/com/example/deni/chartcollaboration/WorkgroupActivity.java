@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class WorkgroupActivity extends AppCompatActivity {
 
     @BindView(R.id.recycleViewWorkgroup)RecyclerView recyclerViewWg;
     @BindView(R.id.progress_workgroup)ProgressBar progressBarWg;
+    @BindView(R.id.addWorkgroupButton)Button addButton;
 
 
     @Override
@@ -66,6 +68,8 @@ public class WorkgroupActivity extends AppCompatActivity {
     }
 
 
+
+
     @OnClick(R.id.backButtonWorkgroup)
     public void back(){
         Intent pindah = new Intent(WorkgroupActivity.this, MainActivity.class);
@@ -74,13 +78,41 @@ public class WorkgroupActivity extends AppCompatActivity {
 
 
     private void loadWorkgroup(){
+        addButton.setVisibility(View.INVISIBLE);
+
+        Intent intent = getIntent();
+//from login
+//        pindah.putExtra("username",jsonObj.getString("username"));
+//        pindah.putExtra("id_account",jsonObj.getString("id_account"));
+//        pindah.putExtra("role","author");
+
+
+        String username = intent.getStringExtra("username");
+        String id_account = intent.getStringExtra("id_account");
+        String role = intent.getStringExtra("role");
+
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         RegisterAPI api  = retrofit.create(RegisterAPI.class); // panggil class di register adapter
+
         Call<ValueWorkgroups> call =  api.viewWorkgroup();
+
+        Log.d( "@@role" , role);
+        Log.d( "@@role" , id_account);
+
+        if(role.equals("author")){
+            Log.d( "@@role executed" , role);
+            addButton.setVisibility(View.VISIBLE);
+            call =  api.viewChartManagerByUsername(id_account);
+
+        }
+
+
 
         call.enqueue(new Callback<ValueWorkgroups>() {
 

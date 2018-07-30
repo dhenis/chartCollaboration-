@@ -6,6 +6,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 import com.example.deni.chartcollaboration.model.Value;
+import com.example.deni.chartcollaboration.model.ValueAccountManager;
 import com.example.deni.chartcollaboration.model.ValueChartManager;
 import com.example.deni.chartcollaboration.model.ValueWorkgroups;
 
@@ -57,8 +58,21 @@ public interface RegisterAPI {
     Call<Value> getLastValueFromChart( @Field("chart_id") String chart_id );
 
     @FormUrlEncoded
+    @POST ("account_manager_view.php")// input data android ke DB
+    Call<ValueAccountManager> viewAccountManagerById(@Field("chart_id") String chart_id );
+
+    @FormUrlEncoded
+    @POST ("account_manager_delete.php")// input data android ke DB
+    Call<ValueAccountManager> deleteAccountManagerById(@Field("account_id") String account_id );
+
+    @FormUrlEncoded
+    @POST ("chat_manager_view.php")// input data android ke DB
+    Call<ValueChartManager> viewChartManagerById( @Field("chart_id") String chart_id );
+
+    @FormUrlEncoded
     @POST ("login.php")// input data android ke DB
-    Call<Value> getUsername( @Field("username") String username );
+    Call<ValueAccountManager> getUsername( @Field("username") String username ,
+                                           @Field("password") String password);
 
     @GET ("view_all.php")// input data android ke DB
     Call<Value> view_all();
@@ -66,8 +80,17 @@ public interface RegisterAPI {
     @GET("view_workgroup.php")
     Call<ValueWorkgroups> viewWorkgroup();
 
+
+    @FormUrlEncoded
+    @POST ("view_workgroup_by_account_id.php")// input data android ke DB
+    Call<ValueWorkgroups> viewChartManagerByUsername( @Field("account_id") String account_id );
+
+
     @GET("chat_manager_view.php")
     Call<ValueChartManager> viewChartManager();
+
+    @GET("chat_manager_view.php")
+    Call<ValueChartManager> getLastChartId();
 
 
     @FormUrlEncoded

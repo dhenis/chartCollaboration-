@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.deni.chartcollaboration.ChartManagerActivity;
 import com.example.deni.chartcollaboration.CreateActivity;
 import com.example.deni.chartcollaboration.R;
 
@@ -82,12 +83,18 @@ public class RecycleWorkgroupAdapter extends RecyclerView.Adapter<RecycleWorkgro
             String workgroup_id_var = workgroup_id.getText().toString();
             String update_time_var = update_time.getText().toString();
 
-            Intent i = new Intent(context, CreateActivity.class);
+            Intent i = new Intent(context, ChartManagerActivity.class);
             i.putExtra("workgroup_name",workgroup_name_var);
             i.putExtra("workgroup_access",workgroup_access_var);
             i.putExtra("workgroup_id",workgroup_id_var);
             i.putExtra("update_time",update_time_var);
             context.startActivity(i);
+
+//            Intent pindah = new Intent(RecyclerChartManagerAdapter.this, CreateActivity.class);
+////                        i.putExtra("id_chart_manager",jsonObj.getString("id_chart_manager"));
+//            pindah.putExtra("chartName",jsonObj.getString("id_chart_manager"));
+//            pindah.putExtra("chartId",jsonObj.getString("id_chart_manager"));
+////                        i.putExtra("chartTimeCreated",jsonObj.getString("id_chart_manager"));
 
         }
 
