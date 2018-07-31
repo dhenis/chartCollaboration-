@@ -3,6 +3,7 @@ package com.example.deni.chartcollaboration;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -42,6 +43,7 @@ public class WorkgroupActivity extends AppCompatActivity {
     @BindView(R.id.recycleViewWorkgroup)RecyclerView recyclerViewWg;
     @BindView(R.id.progress_workgroup)ProgressBar progressBarWg;
     @BindView(R.id.addWorkgroupButton)Button addButton;
+    @BindView(R.id.backButtonWorkgroup)Button backButton;
 
 
     @Override
@@ -57,13 +59,53 @@ public class WorkgroupActivity extends AppCompatActivity {
         recyclerViewWg.setLayoutManager(mLayoutManager);
         recyclerViewWg.setItemAnimator(new DefaultItemAnimator());
         recyclerViewWg.setAdapter(workgroupAdapter);
+
+
+        Intent intent = getIntent();
+
+
+        String username = intent.getStringExtra("username");
+        String id_account = intent.getStringExtra("id_account");
+        String role = intent.getStringExtra("role");
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        Log.d("@@ session rolenya :",pref.getString("role_session",null));
+
+//
+//
+//        if(role.equals("subscriber")){
+//
+//            backButton.setText("Back");
+//
+//        }else{
+//
+//            backButton.setText("Log Out");
+//
+//        }
         loadWorkgroup();
 
     }
 
     @OnClick(R.id.addWorkgroupButton)
     public void create(){
+
+        Intent intent = getIntent();
+//from login
+//        pindah.putExtra("username",jsonObj.getString("username"));
+//        pindah.putExtra("id_account",jsonObj.getString("id_account"));
+//        pindah.putExtra("role","author");
+
+
+        String username = intent.getStringExtra("username");
+        String id_account = intent.getStringExtra("id_account");
+        String role = intent.getStringExtra("role");
+
         Intent pindah = new Intent(WorkgroupActivity.this, WorkgroupAddActivity.class);
+
+        pindah.putExtra("username",username);
+        pindah.putExtra("id_account",id_account);
+        pindah.putExtra("role",role);
+
         startActivityForResult(pindah,1);
     }
 
@@ -72,20 +114,51 @@ public class WorkgroupActivity extends AppCompatActivity {
 
     @OnClick(R.id.backButtonWorkgroup)
     public void back(){
-        Intent pindah = new Intent(WorkgroupActivity.this, MainActivity.class);
-        startActivityForResult(pindah,1);
+//        Intent intent = getIntent();
+//
+//        String username = intent.getStringExtra("username");
+//        String id_account = intent.getStringExtra("id_account");
+//        String role = intent.getStringExtra("role");
+//
+//        if(role.equals("subscriber")){
+//
+//            Intent pindah = new Intent(WorkgroupActivity.this, SearchActivity.class);
+//
+//            startActivityForResult(pindah,1);
+//
+//
+//        }else{
+//
+//            Intent pindah = new Intent(WorkgroupActivity.this, SearchActivity.class);
+//
+//            startActivityForResult(pindah,1);
+//
+//        }
+
+        onBackPressed();
+
     }
 
 
     private void loadWorkgroup(){
-        addButton.setVisibility(View.INVISIBLE);
+
+        //session setting
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
+//        SharedPreferences.Editor editor = pref.edit();
+//        editor.putString("role_session", "subscriber");  // Saving string
+//
+//        editor.commit();
+
+        String role_session = pref.getString("role_session",null);
+        Log.d("@@ session rolenya :",pref.getString("role_session",null));
+
+        if(role_session.equals("subscriber")){
+
+            addButton.setVisibility(View.INVISIBLE);
+
+        }
 
         Intent intent = getIntent();
-//from login
-//        pindah.putExtra("username",jsonObj.getString("username"));
-//        pindah.putExtra("id_account",jsonObj.getString("id_account"));
-//        pindah.putExtra("role","author");
-
 
         String username = intent.getStringExtra("username");
         String id_account = intent.getStringExtra("id_account");
@@ -141,7 +214,7 @@ public class WorkgroupActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ValueWorkgroups> call, Throwable t) {
-                Toast.makeText(WorkgroupActivity.this, "Error connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WorkgroupActivity.this, "Workgroup is empty", Toast.LENGTH_SHORT).show();
                 Log.d( "@@trow:" , String.valueOf(t));
                 Log.d( "@@call:" , String.valueOf(call));
                 progressBarWg.setVisibility(View.GONE);

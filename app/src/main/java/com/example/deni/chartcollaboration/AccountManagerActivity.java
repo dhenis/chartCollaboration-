@@ -74,10 +74,13 @@ public class AccountManagerActivity extends AppCompatActivity {
 
 
     @OnClick(R.id.backButton)
-    public void create(){
+    public void Back(){
 //        Log.v("ini jalan","jajajaj");
-        Intent pindah = new Intent(AccountManagerActivity.this, WorkgroupActivity.class);
-        startActivityForResult(pindah,1);
+//        Intent pindah = new Intent(AccountManagerActivity.this, WorkgroupActivity.class);
+//        startActivityForResult(pindah,1);
+//
+        onBackPressed();
+
     }
 
     private void loadAccountManager(){

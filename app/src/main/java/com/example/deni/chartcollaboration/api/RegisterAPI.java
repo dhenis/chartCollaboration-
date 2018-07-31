@@ -37,12 +37,13 @@ public interface RegisterAPI {
     @FormUrlEncoded
     @POST ("workgroup_add.php")// input data android ke DB
     Call<ValueWorkgroups> addWorkgroup1(  @Field("name") String name,
+                                          @Field("account_id") String account_id,
                                           @Field("access") String access);
 
-    @FormUrlEncoded
-    @POST ("chart_manager_add.php")// input data android ke DB
-    Call<ValueWorkgroups> addChartManager( @Field("name") String name,
-                                           @Field("status") String status);
+//    @FormUrlEncoded
+//    @POST ("chart_manager_add.php")// input data android ke DB
+//    Call<ValueWorkgroups> addChartManager( @Field("name") String name,
+//                                           @Field("status") String status);
 
     @FormUrlEncoded
     @POST ("workgroup_delete.php")// input data android ke DB
@@ -70,6 +71,23 @@ public interface RegisterAPI {
     @POST ("login.php")// input data android ke DB
     Call<ValueAccountManager> getUsername( @Field("username") String username ,
                                            @Field("password") String password);
+
+    @FormUrlEncoded
+    @POST ("register.php")// input data android ke DB
+    Call<ValueAccountManager> RegisterNewUser( @Field("username") String username ,
+                                               @Field("password") String password ,
+                                               @Field("email") String email
+
+    );
+
+    @FormUrlEncoded
+    @POST ("register_insert.php")// input data android ke DB
+    Call<ValueAccountManager> RegisterChangningNewUser( @Field("username") String username ,
+                                               @Field("password") String password ,
+                                               @Field("email") String email,
+                                               @Field("chart_id") String chart_id
+
+    );
 
     @GET ("view_all.php")// input data android ke DB
     Call<Value> view_all();
@@ -101,6 +119,19 @@ public interface RegisterAPI {
     @FormUrlEncoded
     @POST ("view_chart_manager_by_id.php")// input data android ke DB
     Call<ValueChartManager> searchChartById( @Field("chart_id") String chart_id );
+
+    @FormUrlEncoded
+    @POST ("chart_manager_add.php")// input data android ke DB
+    Call<ValueChartManager> createNewChart( @Field("name") String name,
+                                            @Field("status") String status,
+                                            @Field("id_workgroup") String id_workgroup
+                                            );
+
+//    $name = $_GET['name'];
+//    $status = $_GET['status'];
+//    $id_workgroup = $_GET['id_workgroup'];
+//
+
 
     @FormUrlEncoded
     @POST("search.php")

@@ -1,6 +1,7 @@
 package com.example.deni.chartcollaboration;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +40,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        //session setting
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("role_session", "subscriber");  // Saving string
+
+        editor.commit();
+
+        String role_session = pref.getString("role_session",null);
+        Log.d("@@ session rolenya :",pref.getString("role_session",null));
+
     }
 
 

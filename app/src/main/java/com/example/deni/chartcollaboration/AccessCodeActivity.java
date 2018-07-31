@@ -115,11 +115,11 @@ public class AccessCodeActivity extends AppCompatActivity {
 //                        Log.d("dari array: ", String.valueOf(jsonObj.getString("id_chart_manager")));
 
                         // fungsi pindah
-                        Intent pindah = new Intent(AccessCodeActivity.this, CreateActivity.class);
+                        Intent pindah = new Intent(AccessCodeActivity.this, RegisterActivity.class);
 
                         pindah.putExtra("username",String.valueOf(" "));
                         pindah.putExtra("id_account",String.valueOf(" "));
-                        pindah.putExtra("role","subscriber");
+                        pindah.putExtra("role","change");
 
 
                         pindah.putExtra("chartId",chartId);

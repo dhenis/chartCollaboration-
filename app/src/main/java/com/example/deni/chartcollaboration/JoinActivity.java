@@ -156,10 +156,9 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
     @OnClick(R.id.button_back)
     public void create(){
-//        Log.v("ini jalan","jajajaj");
-        Intent pindah2 = new Intent(JoinActivity.this, MainActivity.class);
-        startActivityForResult(pindah2, 1 );
-
+        //        Intent pindah2 = new Intent(JoinActivity.this, SearchActivity.class);
+//        startActivityForResult(pindah2, 1 );
+        onBackPressed();
     }
 
     @Override

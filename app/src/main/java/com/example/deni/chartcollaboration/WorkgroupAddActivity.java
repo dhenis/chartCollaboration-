@@ -48,6 +48,20 @@ public class WorkgroupAddActivity extends AppCompatActivity {
     @BindView(R.id.accessCode) TextView accessCode1;
 
     @OnClick(R.id.buttonAddWorkgroup) void addWorkgroup(){
+        Intent intent = getIntent();
+//from login
+//        pindah.putExtra("username",jsonObj.getString("username"));
+//        pindah.putExtra("id_account",jsonObj.getString("id_account"));
+//        pindah.putExtra("role","author");
+
+
+        final String username = intent.getStringExtra("username");
+        final String id_account = intent.getStringExtra("id_account");
+        final String role = intent.getStringExtra("role");
+
+
+
+
         Log.d("coba : ", String.valueOf(randomNum));
         //Untuk menampilkan progress dialog
         progress = new ProgressDialog(this);
@@ -68,8 +82,10 @@ public class WorkgroupAddActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        Log.d("@@id_account : ",id_account);
+
         RegisterAPI api = retrofit.create(RegisterAPI.class);
-        Call<ValueWorkgroups> call = api.addWorkgroup1(workgroupName_var,accessCode_var);
+        Call<ValueWorkgroups> call = api.addWorkgroup1(workgroupName_var,id_account,accessCode_var);
 
         call.enqueue(new Callback<ValueWorkgroups>(){
             @Override
@@ -81,7 +97,21 @@ public class WorkgroupAddActivity extends AppCompatActivity {
                 if(value.equals("1")){
 
                     Toast.makeText(WorkgroupAddActivity.this, "Workgroup is created", Toast.LENGTH_SHORT).show();
-                    back();
+                    Intent pindah = new Intent(WorkgroupAddActivity.this, WorkgroupActivity.class);
+
+
+                    pindah.putExtra("username", username);
+                    pindah.putExtra("id_account", id_account);
+                    pindah.putExtra("role","author");
+
+//
+//                    String username = intent.getStringExtra("username");
+//                    String id_account = intent.getStringExtra("id_account");
+//                    String role = intent.getStringExtra("role");
+
+
+
+                    startActivityForResult(pindah, 1);
 
 
                     //
@@ -102,17 +132,16 @@ public class WorkgroupAddActivity extends AppCompatActivity {
     }
     public void back() {
 
-        Intent pindah = new Intent(WorkgroupAddActivity.this, WorkgroupActivity.class);
-        startActivityForResult(pindah, 1);
+
 
     }
 
     @OnClick(R.id.backButtonWorkgroup)
     public void join(){
-//        Log.v("ini jalan","jajajaj");
-        Intent pindah = new Intent(WorkgroupAddActivity.this, WorkgroupActivity.class);
-        startActivityForResult(pindah,1);
-
+////        Log.v("ini jalan","jajajaj");
+//        Intent pindah = new Intent(WorkgroupAddActivity.this, WorkgroupActivity.class);
+//        startActivityForResult(pindah,1);
+        onBackPressed();
     }
         @Override
     protected void onCreate(Bundle savedInstanceState) {

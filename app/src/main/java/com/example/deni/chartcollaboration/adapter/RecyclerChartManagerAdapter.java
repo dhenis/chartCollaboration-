@@ -2,6 +2,7 @@ package com.example.deni.chartcollaboration.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.deni.chartcollaboration.CreateActivity;
+import com.example.deni.chartcollaboration.JoinActivity;
 import com.example.deni.chartcollaboration.R;
 
 import com.example.deni.chartcollaboration.model.ChartManager;
@@ -48,7 +50,7 @@ public class RecyclerChartManagerAdapter extends RecyclerView.Adapter<RecyclerCh
         ChartManager wg = chartManagers.get(position);
         Log.d("@@position ; ", String.valueOf(position));
 
-        holder.NameChartManager.setText(wg.getChartManagerName()); // untuk men set text. getNim() dari kelas mahasiswa / model
+        holder.NameChartManager.setText("chart "+wg.getIdChartManager()); // untuk men set text. getNim() dari kelas mahasiswa / model
         holder.statusChatManager.setText(wg.getChartManagerStatus());
         holder.idChartManager.setText(wg.getIdChartManager());
         holder.createdTimeChatManaager.setText(wg.getChartManagerCreatedTime());
@@ -78,19 +80,48 @@ public class RecyclerChartManagerAdapter extends RecyclerView.Adapter<RecyclerCh
 
         @Override
         public void onClick(View view) {
-            String NameChartManager_var = NameChartManager.getText().toString();
-            String statusChatManager_var = statusChatManager.getText().toString();
-            String idChartManager_id_var = idChartManager.getText().toString();
-            String createdTimeChatManaager_var = createdTimeChatManaager.getText().toString();
 
-            Intent i = new Intent(context, CreateActivity.class);
-            i.putExtra("chartName",NameChartManager_var);
-            i.putExtra("chartStatus",statusChatManager_var);
-            i.putExtra("chartId",idChartManager_id_var);
-            i.putExtra("chartTimeCreated",createdTimeChatManaager_var);
-            context.startActivity(i);
+            SharedPreferences pref = context.getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
+//            SharedPreferences.Editor editor = pref.edit();
+//            editor.putString("role_session", "subscriber");  // Saving string
+//
+//            editor.commit();
+
+            String role_session = pref.getString("role_session",null);
+            Log.d("@@ chartmanager :",pref.getString("role_session",null));
+
+            if(role_session.equals("subscriber")){
+                String NameChartManager_var = NameChartManager.getText().toString();
+                String statusChatManager_var = statusChatManager.getText().toString();
+                String idChartManager_id_var = idChartManager.getText().toString();
+                String createdTimeChatManaager_var = createdTimeChatManaager.getText().toString();
+
+                Intent i = new Intent(context, JoinActivity.class);
+                i.putExtra("chartName",NameChartManager_var);
+                i.putExtra("chartStatus",statusChatManager_var);
+                i.putExtra("chartId",idChartManager_id_var);
+                i.putExtra("chartTimeCreated",createdTimeChatManaager_var);
+                context.startActivity(i);
+
+
+            }else{
+                String NameChartManager_var = NameChartManager.getText().toString();
+                String statusChatManager_var = statusChatManager.getText().toString();
+                String idChartManager_id_var = idChartManager.getText().toString();
+                String createdTimeChatManaager_var = createdTimeChatManaager.getText().toString();
+
+                Intent i = new Intent(context, CreateActivity.class);
+                i.putExtra("chartName",NameChartManager_var);
+                i.putExtra("chartStatus",statusChatManager_var);
+                i.putExtra("chartId",idChartManager_id_var);
+                i.putExtra("chartTimeCreated",createdTimeChatManaager_var);
+                context.startActivity(i);
+
+
+            }
 
         }
+
 
     }
 }

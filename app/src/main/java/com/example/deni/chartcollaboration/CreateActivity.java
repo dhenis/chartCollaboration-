@@ -122,10 +122,11 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
     @OnClick(R.id.button_back)
     public void create(){
-//        Log.v("ini jalan","jajajaj");
-        Intent pindah2 = new Intent(CreateActivity.this, MainActivity.class);
-        startActivityForResult(pindah2, 1 );
 
+
+//        Intent pindah2 = new Intent(CreateActivity.this, MainActivity.class);
+//        startActivityForResult(pindah2, 1 );
+        onBackPressed();
     }
 
     @Override
@@ -371,11 +372,6 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                         //                    String data = "[{\"jk\":\"Laki - Laki\",\"jurusan\":\"\",\"nama\":\"\",\"nim\":\"0\"}, {\"jk\":\"Perempuan\",\"jurusan\":\"Teknik Informatika\",\"nama\":\"1\",\"nim\":\"151524001\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"System Informasi1\",\"nama\":\"2\",\"nim\":\"151524029\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"Kedokteran\",\"nama\":\"3\",\"nim\":\"151524030\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"Ilmu Komputer\",\"nama\":\"4\",\"nim\":\"151524088\"}]";
                         String data = new Gson().toJson(response.body().getResult()).toString();
                         Log.v("data nya @@ : ", data);
-
-                        //[{"jk":"Perempuan","jurusan":"Teknik Informatika","nama":"1","nim":"151524001"},
-                        // {"jk":"Laki - Laki","jurusan":"System Informasi1","nama":"2","nim":"151524029"},
-                        // {"jk":"Laki - Laki","jurusan":"Kedokteran","nama":"3","nim":"151524030"},
-                        // {"jk":"Laki - Laki","jurusan":"Ilmu Komputer","nama":"4","nim":"151524088"}]
 
                         chart_list = response.body().getResult();
                         //                    Log.d("dari value: ",response.body().toString());

@@ -88,6 +88,7 @@ public class RecycleWorkgroupAdapter extends RecyclerView.Adapter<RecycleWorkgro
             i.putExtra("workgroup_access",workgroup_access_var);
             i.putExtra("workgroup_id",workgroup_id_var);
             i.putExtra("update_time",update_time_var);
+
             context.startActivity(i);
 
 //            Intent pindah = new Intent(RecyclerChartManagerAdapter.this, CreateActivity.class);

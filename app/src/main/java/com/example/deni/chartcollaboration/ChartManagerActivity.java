@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,6 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
 
 public class ChartManagerActivity extends AppCompatActivity {
 
@@ -50,6 +53,8 @@ public class ChartManagerActivity extends AppCompatActivity {
 
     @BindView(R.id.recycleChartManager)RecyclerView recyclerViewCrm;
     @BindView(R.id.progressChartManager)ProgressBar progressBarCrm;
+    @BindView(R.id.addChartManagerButton)Button addChartManagerButton;
+    @BindView(R.id.manageAccountButton)Button manageAccountButton;
 
 
     @Override
@@ -94,7 +99,13 @@ public class ChartManagerActivity extends AppCompatActivity {
         String workgroup_id = intent.getStringExtra("workgroup_id");
         String workgroup_access = intent.getStringExtra("workgroup_access");
 
-        Call<ValueChartManager> call =  api.viewChartManagerById(workgroup_id);
+//        @Field("name") String name,
+//        @Field("status") String status,
+//        @Field("id_workgroup") String id_workgroup
+
+        Call<ValueChartManager> call =  api.createNewChart(workgroup_name,"1",workgroup_id);
+
+        Log.d("@@workgroup ",workgroup_id);
 
         call.enqueue(new Callback<ValueChartManager>() {
 
@@ -103,12 +114,12 @@ public class ChartManagerActivity extends AppCompatActivity {
                 String value = response.body().getValue();
                 String message = response.body().getMessage();
                 String data = new Gson().toJson(response.body().getChartManagerResult()).toString();
-                String lastElement = new Gson().toJson(response.body().getLastElement()).toString();
+//                String lastElement = new Gson().toJson(response.body().getLastElement()).toString();
 
 //                Toast.makeText(ChartManagerActivity.this, lastElement, Toast.LENGTH_SHORT).show();
 
-                Log.e("@@ Last element : ", lastElement);
-//                Log.e("@@ data: ", String.valueOf(data));
+//                Log.e("@@ Last element : ", lastElement);
+                Log.e("@@ data: ", String.valueOf(data));
 
                 if (value.equals("1")) {
                     progressBarCrm.setVisibility(View.GONE);
@@ -118,20 +129,11 @@ public class ChartManagerActivity extends AppCompatActivity {
 
                         JSONArray jsonArr = new JSONArray(data);
 
-//
-//                        for (int i = 0; i < jsonArr.length(); i++) {
-//
-//                            JSONObject jsonObj = jsonArr.getJSONObject(i);
-//
-//                            Toast.makeText(ChartManagerActivity.this, String.valueOf(jsonObj), Toast.LENGTH_SHORT).show();
-//
-//                        }
-
                         JSONObject jsonObj = jsonArr.getJSONObject(0);
 
-//                        Toast.makeText(ChartManagerActivity.this, String.valueOf(jsonObj.getString("id")), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChartManagerActivity.this, String.valueOf(jsonObj.getString("id_chart_manager")), Toast.LENGTH_SHORT).show();
 
-                        Log.d("dari array: ", String.valueOf(jsonObj.getString("id_chart_manager")));
+                        Log.d("dari array@@: ", String.valueOf(jsonObj.getString("id_chart_manager")));
 
 
 //
@@ -169,7 +171,7 @@ public class ChartManagerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ValueChartManager> call, Throwable t) {
-                Toast.makeText(ChartManagerActivity.this, "Error connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChartManagerActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
                 Log.d( "@@trow:" , String.valueOf(t));
                 Log.d( "@@call:" , String.valueOf(call));
                 progressBarCrm.setVisibility(View.GONE);
@@ -199,8 +201,27 @@ public class ChartManagerActivity extends AppCompatActivity {
 
     @OnClick(R.id.backChartManagerButton)
     public void back(){
-        Intent pindah = new Intent(ChartManagerActivity.this, MainActivity.class);
-        startActivityForResult(pindah,1);
+//        Intent pindah = new Intent(ChartManagerActivity.this, MainActivity.class);
+//
+//        startActivityForResult(pindah,1);
+
+        onBackPressed();
+
+//        Intent intent = getIntent();
+//
+//        String username = intent.getStringExtra("username");
+//        String id_account = intent.getStringExtra("id_account");
+//        String role = intent.getStringExtra("role");
+//
+//        Log.d("rople@@", role);
+//
+//        Intent pindah = new Intent(ChartManagerActivity.this, WorkgroupActivity.class);
+//
+//        pindah.putExtra("username",username);
+//        pindah.putExtra("id_account",id_account);
+//        pindah.putExtra("role",role);
+//
+//        startActivityForResult(pindah,1);
     }
 
     @OnClick(R.id.manageAccountButton)
@@ -230,6 +251,25 @@ public class ChartManagerActivity extends AppCompatActivity {
 
 
     private void loadChartManager(){
+
+        //session setting
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
+//        SharedPreferences.Editor editor = pref.edit();
+//        editor.putString("role_session", "subscriber");  // Saving string
+//
+//        editor.commit();
+
+        String role_session = pref.getString("role_session",null);
+        Log.d("@@ session rolenya :",pref.getString("role_session",null));
+
+        if(role_session.equals("subscriber")){
+
+            addChartManagerButton.setVisibility(View.INVISIBLE);
+            manageAccountButton.setVisibility(View.INVISIBLE);
+
+        }
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -254,13 +294,16 @@ public class ChartManagerActivity extends AppCompatActivity {
                 Log.e("@@ value: ",value);
                 Log.e("@@ message: ", String.valueOf(response.body().getMessage()));
                 Log.e("@@ result: ", String.valueOf(response.body().getChartManagerResult()));
-                String lastElement = new Gson().toJson(response.body().getLastElement()).toString();
 
-                Log.e("@@ Last element : ", lastElement);
-                Log.e("@@ Last element 22: ", response.body().getLastElement().toString());
+
 //                Log.e("@@ data: ", String.valueOf(data));
 
                 if (value.equals("1")) {
+                    String lastElement = new Gson().toJson(response.body().getLastElement()).toString();
+
+                    Log.e("@@ Last element : ", lastElement);
+
+
                     progressBarCrm.setVisibility(View.GONE);
                     chartManagers = response.body().getChartManagerResult();
 
@@ -275,7 +318,7 @@ public class ChartManagerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ValueChartManager> call, Throwable t) {
-                Toast.makeText(ChartManagerActivity.this, "Error connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChartManagerActivity.this, "Data empty", Toast.LENGTH_SHORT).show();
                 Log.d( "@@trow:" , String.valueOf(t));
                 Log.d( "@@call:" , String.valueOf(call));
                 progressBarCrm.setVisibility(View.GONE);
