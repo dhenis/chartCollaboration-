@@ -2,6 +2,7 @@ package com.example.deni.chartcollaboration;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -117,6 +118,12 @@ public class RegisterActivity extends AppCompatActivity {
 //                    move to another page
                             Intent pindah = new Intent(RegisterActivity.this, CreateActivity.class);
 
+                            SharedPreferences pref = getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("role_session", "author");  // Saving string
+
+                            editor.commit();
+
                             // from login
                             pindah.putExtra("username",jsonObj.getString("username"));
                             pindah.putExtra("id_account",jsonObj.getString("id_account"));
@@ -180,6 +187,13 @@ public class RegisterActivity extends AppCompatActivity {
 //                    move to another page
                             Log.d("@@ROLE : ",role);
                             Intent pindah = new Intent(RegisterActivity.this, WorkgroupActivity.class);
+
+
+                            SharedPreferences pref = getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("role_session", "author");  // Saving string
+
+                            editor.commit();
 
                             // from login
                             pindah.putExtra("username",jsonObj.getString("username"));

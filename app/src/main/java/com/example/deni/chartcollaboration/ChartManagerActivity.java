@@ -83,6 +83,33 @@ public class ChartManagerActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setContentView(R.layout.activity_chart_manager);
+        ButterKnife.bind(this);
+
+        //get intent
+        Intent intent = getIntent();
+
+        String workgroup_name = intent.getStringExtra("workgroup_name");
+        String workgroup_id = intent.getStringExtra("workgroup_id");
+        String workgroup_access = intent.getStringExtra("workgroup_access");
+
+
+        setTitle("Name: "+workgroup_name+" | Code: "+workgroup_access);
+
+        chartManagerAdapter  = new RecyclerChartManagerAdapter(this, chartManagers);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerViewCrm.setLayoutManager(mLayoutManager);
+        recyclerViewCrm.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewCrm.setAdapter(chartManagerAdapter);
+        loadChartManager();
+
+
+    }
+
     @OnClick(R.id.addChartManagerButton)
     public void createNewChart(){
 

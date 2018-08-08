@@ -197,6 +197,14 @@ public class LoginActivity extends AppCompatActivity {
                         pindah.putExtra("id_account",jsonObj.getString("id_account"));
                         pindah.putExtra("role","author");
 
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("role_session", "author");  // Saving string
+
+                        editor.commit();
+
+
+
                         startActivityForResult(pindah,1);
 
                     } catch (JSONException e) {

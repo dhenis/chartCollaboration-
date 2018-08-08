@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         //session setting
         SharedPreferences pref = getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
+        editor.clear();
+        editor.commit(); // commit changes
+
         editor.putString("role_session", "subscriber");  // Saving string
 
         editor.commit();
