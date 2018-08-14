@@ -58,6 +58,7 @@ public interface RegisterAPI {
     @POST ("view_last_chart.php")// input data android ke DB
     Call<Value> getLastValueFromChart( @Field("chart_id") String chart_id );
 
+
     @FormUrlEncoded
     @POST ("account_manager_view.php")// input data android ke DB
     Call<ValueAccountManager> viewAccountManagerById(@Field("chart_id") String chart_id );
@@ -104,6 +105,9 @@ public interface RegisterAPI {
     @POST ("acces_code_check.php")// input data android ke DB
     Call<ValueWorkgroups> checkAccessCode( @Field("chart_id") String chart_id,
                                            @Field("access") String access);
+    @FormUrlEncoded
+    @POST ("getAccessCodeByChartId.php")// input data android ke DB
+    Call<ValueWorkgroups> getAccessCodeByIdChart( @Field("chart_id") String chart_id );
 
 
     @GET("chat_manager_view.php")

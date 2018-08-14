@@ -19,26 +19,23 @@
         android:id="@+id/editX"
         android:layout_width="50dip"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="34dp"
-        android:layout_marginRight="34dp"
-        android:layout_toLeftOf="@+id/editY"
-        android:layout_toStartOf="@+id/editY"
+        android:layout_below="@+id/chart1"
+        android:layout_toEndOf="@+id/editY"
+        android:layout_toRightOf="@+id/editY"
+        android:digits="0123456789+"
         android:hint="X"
         android:inputType="number"
         android:text="0"
-        android:visibility="invisible"
-        />
+        android:visibility="invisible" />
 
     <EditText
         android:id="@+id/editY"
         android:layout_width="70dip"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="27dp"
-        android:layout_marginRight="27dp"
+        android:layout_above="@+id/button_add"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:digits="0123456789+"
         android:hint="Y"
         android:inputType="number" />
 
@@ -69,16 +66,18 @@
         android:id="@+id/button_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button_delete"
+        android:layout_alignBottom="@+id/button_delete"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/chart1"
         android:text="Add" />
 
     <Button
         android:id="@+id/button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/chart1"
+        android:layout_alignBaseline="@+id/button_Author"
+        android:layout_alignBottom="@+id/button_Author"
         android:layout_toEndOf="@+id/button_add"
         android:layout_toRightOf="@+id/button_add"
         android:text="Del" />
@@ -87,8 +86,9 @@
         android:id="@+id/button_Author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button_back"
-        android:layout_alignBottom="@+id/button_back"
+        android:layout_below="@+id/editX"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
         android:layout_toLeftOf="@+id/button_back"
         android:layout_toStartOf="@+id/button_back"
         android:text="Play" />
@@ -97,9 +97,10 @@
         android:id="@+id/button_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button_Author"
+        android:layout_alignBottom="@+id/button_Author"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/chart1"
         android:text="Back"
         tools:layout_editor_absoluteX="95dp"
         tools:layout_editor_absoluteY="231dp" />
@@ -118,9 +119,19 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/button_Author"
-        android:layout_marginTop="29dp"
-        android:visibility="invisible" />
+        android:layout_below="@+id/button_add"
+        android:layout_marginTop="13dp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/AccessCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/category"
+        android:layout_alignBottom="@+id/category"
+        android:layout_alignLeft="@+id/editX"
+        android:layout_alignStart="@+id/editX"
+        android:text="Code:" />
 
 
 </RelativeLayout>

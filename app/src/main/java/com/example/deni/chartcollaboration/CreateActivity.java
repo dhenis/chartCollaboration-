@@ -16,12 +16,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.deni.chartcollaboration.adapter.RecyclerViewAdapter;
 import com.example.deni.chartcollaboration.api.RegisterAPI;
 import com.example.deni.chartcollaboration.model.Charts;
 import com.example.deni.chartcollaboration.model.Value;
+import com.example.deni.chartcollaboration.model.ValueWorkgroups;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -79,6 +81,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
     MediaPlayer mp;
 
     // karena udah pake butter knife --> onclick mendjadi lebih simple
+    @BindView(R.id.AccessCode) TextView AccessCode;
     @BindView(R.id.editX) EditText editX;
     @BindView(R.id.editY) EditText editY;
     @BindView(R.id.chart_id) EditText chart_id;
@@ -141,10 +144,15 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         Intent intent = getIntent();
         String chartName = intent.getStringExtra("chartName");
         String chartId = intent.getStringExtra("chartId");
+//        String workgroup_access = intent.getStringExtra("workgroup_access");
 
         chart_id.setText(chartId); // set chart id
-        Log.d("##chart id##", chartId);
 
+        setAccessCode(chartId); // show access code
+
+
+        Log.d("##chart id##", chartId);
+        setTitle("Author Page : chart"+chartId);
         loadDataMahasiswa(); // panggil fungsi yang dibawah
 
 //        editYY = (EditText)findViewById(R.id.editY);
@@ -173,9 +181,6 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         btnAddData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Log.d("cba","apa");
-//                    addEntry(1);
 
                 // masukkan
 
@@ -210,11 +215,15 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                         progress.dismiss();
 
                         if(value.equals("1")){
-                            Toast.makeText(CreateActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateActivity.this, "Data Added", Toast.LENGTH_SHORT).show();
 
                             addEntry(Integer.parseInt(y_var));
+
+                            editY.setText(""); // set after submit the internet
+
+
                         }else{
-                            Toast.makeText(CreateActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateActivity.this, "failed to add data", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -266,11 +275,11 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                         progress.dismiss();
 
                         if(value.equals("1")){
-                            Toast.makeText(CreateActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateActivity.this, "Data removed", Toast.LENGTH_SHORT).show();
                             removeLastEntry();
 //                            addEntry(Integer.parseInt(y_var));
                         }else{
-                            Toast.makeText(CreateActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateActivity.this, "Failed to remove add", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -369,7 +378,6 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
                     if (value.equals("1")) { // nilai satu means bisa menghubungi server
 
-                        //                    String data = "[{\"jk\":\"Laki - Laki\",\"jurusan\":\"\",\"nama\":\"\",\"nim\":\"0\"}, {\"jk\":\"Perempuan\",\"jurusan\":\"Teknik Informatika\",\"nama\":\"1\",\"nim\":\"151524001\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"System Informasi1\",\"nama\":\"2\",\"nim\":\"151524029\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"Kedokteran\",\"nama\":\"3\",\"nim\":\"151524030\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"Ilmu Komputer\",\"nama\":\"4\",\"nim\":\"151524088\"}]";
                         String data = new Gson().toJson(response.body().getResult()).toString();
                         Log.v("data nya @@ : ", data);
 
@@ -426,6 +434,93 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
     }
 
 
+    private void setAccessCode(String CHART_ID){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RegisterAPI api  = retrofit.create(RegisterAPI.class); // panggil class di register adapter
+        Call<ValueWorkgroups> call =  api.getAccessCodeByIdChart(CHART_ID);
+
+        call.enqueue(new Callback<ValueWorkgroups>() {
+
+
+            @Override
+            public void onResponse(Call<ValueWorkgroups> call, Response<ValueWorkgroups> response) {
+                String value = response.body().getValue();
+                String message = response.body().getMessage();
+                String data = new Gson().toJson(response.body().getWorkgroupResult()).toString();
+//                String lastElement = new Gson().toJson(response.body().getWorkgroupResult()).toString();
+
+//                Toast.makeText(ChartManagerActivity.this, lastElement, Toast.LENGTH_SHORT).show();
+
+
+                Log.e("@@ Last element : ", data);
+//                Log.e("@@ data: ", String.valueOf(data));
+
+                if (value.equals("1")) {
+
+                    try {
+
+                        JSONArray jsonArr = new JSONArray(data);
+
+                        JSONObject jsonObj = jsonArr.getJSONObject(0);
+
+                        AccessCode.setText("AccessCode: "+ jsonObj.getString("access")); // set chart id
+
+//                        Toast.makeText(ChartManagerActivity.this, String.valueOf(jsonObj.getString("id")), Toast.LENGTH_SHORT).show();
+
+//                        Log.d("dari array: ", String.valueOf(jsonObj.getString("id_chart_manager")));
+
+//                        // fungsi pindah
+//                        Intent pindah = new Intent(AccessCodeActivity.this, RegisterActivity.class);
+//
+//                        pindah.putExtra("username",String.valueOf(" "));
+//                        pindah.putExtra("id_account",String.valueOf(" "));
+//                        pindah.putExtra("role","change");
+//
+//
+//                        pindah.putExtra("chartId",chartId);
+//                        pindah.putExtra("id_workgroup",jsonObj.getString("id_workgroup"));
+//                        pindah.putExtra("name",jsonObj.getString("name"));
+//                        pindah.putExtra("access",jsonObj.getString("access"));
+//                        pindah.putExtra("update_time",jsonObj.getString("update_time"));
+//                        Log.d("@@pindah: ", String.valueOf(pindah));
+//
+//                        startActivityForResult(pindah,1);
+
+                        //                        array = new JSONArray(new Gson().toJson(response.body().getResult()));
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+//                    chartManagerAdapter = new RecyclerChartManagerAdapter(ChartManagerActivity.this, chartManagers);
+//
+//                    Toast.makeText(ChartManagerActivity.this, message, Toast.LENGTH_SHORT).show();
+//
+//                    recyclerViewCrm.setAdapter(chartManagerAdapter);
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ValueWorkgroups> call, Throwable t) {
+                Log.d( "@@access code fail:" , String.valueOf(call));
+            }
+
+        });
+
+
+
+
+    }
+
+
     // mpa lagi
 
     int[] mColors = ColorTemplate.VORDIPLOM_COLORS;
@@ -458,8 +553,8 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
             // let the chart know it's data has changed
             mChart.notifyDataSetChanged();
 
-            mChart.setVisibleXRangeMaximum(6);
-            mChart.setVisibleYRangeMaximum(15, YAxis.AxisDependency.LEFT);
+            mChart.setVisibleXRangeMaximum(220);
+            mChart.setVisibleYRangeMaximum(220, YAxis.AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
             mChart.moveViewTo(data.getXValCount()-7, 50f, YAxis.AxisDependency.LEFT);
@@ -597,7 +692,9 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
         mySound.play(raygunID, 1, 1, 1, 0, volume);
 
-        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Value: "+String.valueOf(Math.round(e.getVal())), Toast.LENGTH_SHORT).show();
+//
+//        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -612,10 +709,10 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
     protected void onResume(){
         super.onResume();
         Log.d("action", "OnResume");
-        writeTable();
-        loadDataMahasiswa();
-        /// code to update data then notify Adapter
-        viewAdapter.notifyDataSetChanged();
+//        writeTable();
+//        loadDataMahasiswa();
+//        /// code to update data then notify Adapter
+//        viewAdapter.notifyDataSetChanged();
     }
 //
     @Override
@@ -623,11 +720,11 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         super.onRestart();
 
         Log.d("action", "OnRestart");
-        writeTable();
-        loadDataMahasiswa();
-
-        /// code to update data then notify Adapter
-        viewAdapter.notifyDataSetChanged();
+//        writeTable();
+//        loadDataMahasiswa();
+//
+//        /// code to update data then notify Adapter
+//        viewAdapter.notifyDataSetChanged();
     }
 
 }

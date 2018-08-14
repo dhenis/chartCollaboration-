@@ -206,7 +206,7 @@ public class WorkgroupActivity extends AppCompatActivity {
 
                     workgroupAdapter = new RecycleWorkgroupAdapter(WorkgroupActivity.this, workgroups);
 
-                    Toast.makeText(WorkgroupActivity.this, message, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(WorkgroupActivity.this, message, Toast.LENGTH_SHORT).show();
 
                     recyclerViewWg.setAdapter(workgroupAdapter);
                 }

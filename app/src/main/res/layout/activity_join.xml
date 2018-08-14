@@ -26,6 +26,7 @@
         android:layout_toStartOf="@+id/editY"
         android:hint="X"
         android:inputType="number"
+        android:digits="0123456789+"
         android:text="0"
         android:visibility="invisible" />
 
@@ -40,6 +41,8 @@
         android:layout_marginRight="27dp"
         android:hint="Y"
         android:inputType="number"
+        android:digits="0123456789+"
+
         android:visibility="invisible" />
 
 
@@ -131,7 +134,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/button_Author"
         android:layout_marginTop="29dp"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
     <Button
         android:id="@+id/button_refresh"

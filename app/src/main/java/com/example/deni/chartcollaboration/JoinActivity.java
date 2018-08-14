@@ -4,9 +4,12 @@ package com.example.deni.chartcollaboration;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -59,6 +62,9 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
     public static final String URL = "http://dhenis.com/charts/";
 
     public static int iteration = 1; // make sure hanya 1 iteration
+
+    public static ArrayList<Entry> yVals = new ArrayList<Entry>();
+
 
     String x_var, y_var, chart_id_var, category_var;
 
@@ -121,12 +127,19 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
     @OnClick(R.id.button_refresh)
     public void refresh(){
-//        removeDataSet();
-        removeAllSet();
-        writeTable();
-        loadDataMahasiswa();
-        /// code to update data then notify Adapter
-        viewAdapter.notifyDataSetChanged();
+
+        Intent intent = getIntent();
+        String chartName = intent.getStringExtra("chartName");
+        String chartId = intent.getStringExtra("chartId");
+
+        String chart_id_var = chart_id.getText().toString();
+
+        Intent pindah = new Intent(JoinActivity.this, JoinActivity.class);
+
+        pindah.putExtra("chartName",chart_id_var);
+        pindah.putExtra("chartId",chart_id_var);
+
+        startActivityForResult(pindah,1);
 
 
     }
@@ -156,9 +169,13 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
     @OnClick(R.id.button_back)
     public void create(){
-        //        Intent pindah2 = new Intent(JoinActivity.this, SearchActivity.class);
-//        startActivityForResult(pindah2, 1 );
-        onBackPressed();
+
+        Intent pindah2 = new Intent(JoinActivity.this, SearchActivity.class);
+
+        startActivityForResult(pindah2, 1 );
+
+        //        onBackPressed();
+//
     }
 
     @Override
@@ -174,8 +191,7 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         String chartId = intent.getStringExtra("chartId");
 
         chart_id.setText(chartId); // set chart id
-
-        loadDataMahasiswa(); // panggil fungsi yang dibawah
+        setTitle("Subscriber Page : chart"+chartId);
 
 //        editYY = (EditText)findViewById(R.id.editY);
         btnAddData = (Button)findViewById(R.id.button_add);
@@ -190,6 +206,20 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         mChart.setOnChartValueSelectedListener(this);
         mChart.setDrawGridBackground(false);
         mChart.setDescription("");
+        mChart.setData(new LineData());
+        mChart.setScaleEnabled(false);
+
+        // no description text
+        mChart.setDescription("");
+        mChart.setNoDataTextDescription("Chart is Empty");
+
+//        mChart.getXAxis().setDrawLabels(false);
+//        mChart.getXAxis().setDrawGridLines(false);
+
+        mChart.invalidate();
+
+        loadData(); // panggil fungsi yang dibawah
+
 
 // -- ini ---
 //        mChart.setDragEnabled(true);
@@ -203,23 +233,12 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
 // ---- baru
 
-        mChart.setData(new LineData());
-        mChart.setScaleEnabled(false);
-
-//        mChart.getXAxis().setDrawLabels(false);
-//        mChart.getXAxis().setDrawGridLines(false);
-
-        mChart.invalidate();
 
         btnAddData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.d("cba","apa");
-//                    addEntry(1);
-
                 // masukkan
-
 
                 //Untuk menampilkan progress dialog
                 progress = new ProgressDialog(v.getContext());
@@ -228,7 +247,6 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
                 progress.show();
 
                 final String x_var, y_var, chart_id_var, category_var;
-
 
                 x_var = editX.getText().toString();
                 y_var = editY.getText().toString();
@@ -251,11 +269,11 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
                         progress.dismiss();
 
                         if(value.equals("1")){
-                            Toast.makeText(JoinActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(JoinActivity.this, "Data added", Toast.LENGTH_SHORT).show();
 
                             addEntry(Integer.parseInt(y_var));
                         }else{
-                            Toast.makeText(JoinActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(JoinActivity.this, "Failed to add data", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -266,8 +284,6 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
                         Toast.makeText(JoinActivity.this,"Error Connection",Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
 
             }
         });
@@ -307,11 +323,11 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
                         progress.dismiss();
 
                         if(value.equals("1")){
-                            Toast.makeText(JoinActivity.this, message, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(JoinActivity.this, message, Toast.LENGTH_SHORT).show();
                             removeLastEntry();
 //                            addEntry(Integer.parseInt(y_var));
                         }else{
-                            Toast.makeText(JoinActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(JoinActivity.this, "fail to remove data", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -358,7 +374,6 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
                         //Perform background work here
                         if (!mp.isPlaying()) {
-//Log.i("entires", String.valueOf(entries.get(0)));
                             playmp(entries.get(v++).getVal());
 //                              playmp(data.getDataSetByIndex(0).getEntryForIndex(v++).getVal());
 
@@ -385,7 +400,20 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
 
     // untuk meload data mahasiswa
-    private void loadDataMahasiswa(){
+    private void loadData(){
+        data = mChart.getData();
+        if(data != null) {
+
+            ILineDataSet set = data.getDataSetByIndex(0);
+
+
+            if (set == null) {
+                    set = createSet(); //masih off
+                    data.addDataSet(set);
+                }
+        }
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -409,17 +437,9 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
                     if (value.equals("1")) { // nilai satu means bisa menghubungi server
 
-                        //                    String data = "[{\"jk\":\"Laki - Laki\",\"jurusan\":\"\",\"nama\":\"\",\"nim\":\"0\"}, {\"jk\":\"Perempuan\",\"jurusan\":\"Teknik Informatika\",\"nama\":\"1\",\"nim\":\"151524001\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"System Informasi1\",\"nama\":\"2\",\"nim\":\"151524029\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"Kedokteran\",\"nama\":\"3\",\"nim\":\"151524030\"}, {\"jk\":\"Laki - Laki\",\"jurusan\":\"Ilmu Komputer\",\"nama\":\"4\",\"nim\":\"151524088\"}]";
                         String data = new Gson().toJson(response.body().getResult()).toString();
-//                        Log.v("data nya @@ : ", data);
-
-                        //[{"jk":"Perempuan","jurusan":"Teknik Informatika","nama":"1","nim":"151524001"},
-                        // {"jk":"Laki - Laki","jurusan":"System Informasi1","nama":"2","nim":"151524029"},
-                        // {"jk":"Laki - Laki","jurusan":"Kedokteran","nama":"3","nim":"151524030"},
-                        // {"jk":"Laki - Laki","jurusan":"Ilmu Komputer","nama":"4","nim":"151524088"}]
 
                         chart_list = response.body().getResult();
-                        //                    Log.d("dari value: ",response.body().toString());
 
                         viewAdapter = new RecyclerViewAdapter(JoinActivity.this, chart_list);
                         recyclerView.setAdapter(viewAdapter);
@@ -433,18 +453,9 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
                                 JSONObject jsonObj = jsonArr.getJSONObject(i);
 
-//                                System.out.println(i); // ini masuk ke chart
                                 addEntry(Integer.parseInt(jsonObj.getString("y")));
 
-//                                Log.d("isi: ",jsonObj.getString("x"));
-
                             }
-//                            Log.d("dari array length: ", String.valueOf(iteration));
-
-                            //                        array = new JSONArray(new Gson().toJson(response.body().getResult()));
-
-
-                            //                        Log.d("dari array: ",array.toString());
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -465,9 +476,10 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
         });
 
-        Log.d("mahasiswa", "summon hahahah");
 
         iteration = 1;
+
+
     }
 
 
@@ -483,29 +495,30 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 //            int test = Integer.parseInt(editY.getText().toString()); masih off
             ILineDataSet set = data.getDataSetByIndex(0);
 
-            // set.addEntry(...); // can be called as well
 
-            if (set == null) {
-                set = createSet(); //masih off
-                data.addDataSet(set);
-            }
+
+//            if (set == null) {
+//                set = createSet(); //masih off
+//                data.addDataSet(set);
+//            }
 
             // add a new x-value first
             data.addXValue(set.getEntryCount() + "");
 
             // choose a random dataSet
             int randomDataSetIndex = (int) (Math.random() * data.getDataSetCount());
-            System.out.println("randomDataSetIndex: "+randomDataSetIndex);
+            //System.out.println("randomDataSetIndex: "+randomDataSetIndex);
 
             // tambah dari disini dari db
-            data.addEntry(new Entry((float) masukan, set.getEntryCount()) , 0); //masih off
+            data.addEntry(new Entry((float) masukan, set.getEntryCount()) , 0);
 
             // let the chart know it's data has changed
             mChart.notifyDataSetChanged();
 
-            mChart.setVisibleXRangeMaximum(6);
-            mChart.setVisibleYRangeMaximum(15, YAxis.AxisDependency.LEFT);
-//
+            mChart.setVisibleXRangeMaximum(220);
+            mChart.setVisibleYRangeMaximum(220, YAxis.AxisDependency.LEFT);
+
+
 //            // this automatically refreshes the chart (calls invalidate())
             mChart.moveViewTo(data.getXValCount()-7, 50f, YAxis.AxisDependency.LEFT);
 
@@ -586,13 +599,146 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
             ILineDataSet set = data.getDataSetByIndex(0);
             Entry e = set.getEntryForXIndex(set.getEntryCount() - 1);
 
-            Log.d("datasetnya @@", String.valueOf(data.getDataSetByIndex(0).getEntryCount()));
-//            Log.d("datanya @@", String.valueOf(data.getDataSetByIndex(data.getDataSetCount() - 1)));
+//            Log.d("datasetnya @@", String.valueOf(data.getDataSetByIndex(0).getEntryCount()));
 
             data.removeDataSet(data.getDataSetByIndex(data.getDataSetCount() - 1));
 
             mChart.notifyDataSetChanged();
             mChart.invalidate();
+        }
+    }
+
+
+    private void removeAll() {
+
+
+        data = mChart.getData();
+        Log.d("getdata:",String.valueOf(data));
+
+        if(data != null) {
+            Log.d("masuk",String.valueOf(data));
+
+
+
+//            public static ArrayList<Entry> yVals = new ArrayList<Entry>();
+
+//            for (int i = 0; i < count; i++) {
+//
+//                float mult = (range + 1);
+//                float val = (float) (Math.random() * mult) + 3;// + (float)
+//                // ((mult *
+//                // 0.1) / 10);
+//
+////                yVals.add(new Entry(val, i));
+//
+//
+//            }
+
+
+            ///////// --- lallalalalla
+
+
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            chart_id_var = chart_id.getText().toString();
+
+            RegisterAPI api = retrofit.create(RegisterAPI.class);
+            Call<Value> call = api.view(chart_id_var);
+
+            call.enqueue(new Callback<Value>(){
+                @Override
+                public void onResponse(Call<Value> call, Response<Value> response) {
+
+                        String value = response.body().getValue();
+
+                        progressBar.setVisibility(View.GONE);
+
+                        if (value.equals("1")) { // nilai satu means bisa menghubungi server
+
+                            String data = new Gson().toJson(response.body().getResult()).toString();
+                            chart_list = response.body().getResult();
+                            viewAdapter = new RecyclerViewAdapter(JoinActivity.this, chart_list);
+                            recyclerView.setAdapter(viewAdapter);
+
+                            try {
+
+                                JSONArray jsonArr = new JSONArray(data);
+
+                                ArrayList<String> xVals = new ArrayList<String>();
+
+                                for(int i=0;i<=jsonArr.length()-1;i++){
+
+                                    xVals.add((i) + "");
+
+                                }
+
+                                for (int i = 0; i < jsonArr.length(); i++) {
+
+                                    JSONObject jsonObj = jsonArr.getJSONObject(i);
+
+                                    yVals.add(new Entry(Integer.parseInt(jsonObj.getString("y")), i));
+
+                                    Log.d("Y:",String.valueOf(yVals));
+
+                                }
+
+
+
+                                Log.d("Coba masukkan ke chart",String.valueOf(yVals));
+                                // create a dataset and give it a type
+                                LineDataSet set1 = new LineDataSet(yVals, "0");
+                                // set1.setFillAlpha(110);
+                                // set1.setFillColor(Color.RED);
+
+                                //        // set the line to be drawn like this "- - - - - -"
+                                //        set1.enableDashedLine(10f, 5f, 0f);
+                                //        set1.enableDashedHighlightLine(10f, 5f, 0f);
+                                //        set1.setColor(Color.BLACK);
+                                //        set1.setCircleColor(Color.BLACK);
+                                //        set1.setLineWidth(1f);
+                                //        set1.setCircleRadius(3f);
+                                //        set1.setDrawCircleHole(false);
+                                //        set1.setValueTextSize(9f);
+                                //        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                                //        set1.setFillDrawable(drawable);
+                                //        set1.setDrawFilled(true);
+
+                                ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+                                dataSets.add(set1); // add the datasets
+
+                                // create a data object with the datasets
+                                LineData data1 = new LineData(xVals, dataSets);
+
+                                // set data
+                                mChart.setData(data1);
+
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                }
+
+                @Override
+                public void onFailure(Call<Value> call, Throwable t) {
+
+                    Toast.makeText(JoinActivity.this,"Error Network", Toast.LENGTH_SHORT).show();
+                }
+
+
+            });
+
+
+            //mas
+
+
         }
     }
 
@@ -670,7 +816,10 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         float volume= ((e.getVal()/(mChart.getYChartMax()-mChart.getYChartMin()))*5);
         //float volume= (e.getVal()/130)*5;
         mySound.play(raygunID, 1, 1, 1, 0, volume);
-        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Value: "+e.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Value: "+String.valueOf(Math.round(e.getVal())), Toast.LENGTH_SHORT).show();
+
+
     }
 
     @Override
@@ -684,10 +833,10 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
     protected void onResume(){
         super.onResume();
         Log.d("action", "OnResume");
-        writeTable();
-        loadDataMahasiswa();
-        /// code to update data then notify Adapter
-        viewAdapter.notifyDataSetChanged();
+//        writeTable();
+//        loadData();
+//        /// code to update data then notify Adapter
+//        viewAdapter.notifyDataSetChanged();
     }
     //
     @Override
@@ -695,11 +844,11 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         super.onRestart();
 
         Log.d("action", "OnRestart");
-        writeTable();
-        loadDataMahasiswa();
-
-        /// code to update data then notify Adapter
-        viewAdapter.notifyDataSetChanged();
+//        writeTable();
+//        loadData();
+//
+//        /// code to update data then notify Adapter
+//        viewAdapter.notifyDataSetChanged();
     }
 
 }

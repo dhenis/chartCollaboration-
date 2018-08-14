@@ -29,7 +29,10 @@
         android:layout_toStartOf="@+id/accessButton"
         android:ems="10"
         android:hint="Access Code"
-        android:inputType="textPersonName" />
+        android:inputType="number"
+        android:digits="0123456789+"
+
+        />
 
     <Button
         android:id="@+id/backButton"

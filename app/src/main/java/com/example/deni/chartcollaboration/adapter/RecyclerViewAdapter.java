@@ -43,6 +43,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, int position) { // tinggal menggunakan yang telah di deklarasikan
         // menggunakan
         Charts crt = charts.get(position);
+        holder.titleX.setText(String.valueOf(position+1)); // untuk men set text. getNim() dari kelas mahasiswa / model
         holder.textViewX.setText(crt.getX()); // untuk men set text. getNim() dari kelas mahasiswa / model
         holder.textViewY.setText(crt.getY());
         holder.textViewChartId.setText(crt.getChartId());
@@ -59,6 +60,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         // memasukkan komponen di tampilan ke variable menggunakan butterknife
         @BindView(R.id.textX)TextView textViewX;
+        @BindView(R.id.titleX)TextView titleX;
         @BindView(R.id.textY)TextView textViewY;
         @BindView(R.id.textChartId)TextView textViewChartId;
         @BindView(R.id.textCategory)TextView textViewCategory;

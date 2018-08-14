@@ -9,6 +9,9 @@
 
     <EditText
         android:id="@+id/searchForm"
+        android:digits="0123456789+"
+        android:inputType="number"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -19,7 +22,7 @@
         android:layout_marginTop="43dp"
         android:ems="10"
         android:hint="Insert chart ID"
-        android:inputType="textPersonName" />
+         />
 
     <Button
         android:id="@+id/searchButton"

@@ -38,13 +38,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String mypreference = "mypref";
 
-
-
     @BindView(R.id.username) EditText username_var;
     @BindView(R.id.password) EditText password_var;
     private ProgressDialog progress;
 //    final String user_var = username_var.getText().toString();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,40 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         String role_session = pref.getString("role_session",null);
         Log.d("@@ session rolenya :",pref.getString("role_session",null));
 
-//        Get SharedPreferences data
-//
-//// If value for key not exist then return second param value - In this case null
-//
-//        boolean userFirstLogin= pref.getBoolean("key_name1", true);  // getting boolean
-//        int pageNumber=pref.getInt("key_name2", 0);             // getting Integer
-//        float amount=pref.getFloat("key_name3", null);          // getting Float
-//        long distance=pref.getLong("key_name4", null);          // getting Long
-//        String email=pref.getString("key_name5", null);         // getting String
-
-//        Storing data as KEY/VALUE pair
-//
-//        editor.putBoolean("key_name1", true);           // Saving boolean - true/false
-//        editor.putInt("key_name2", "int value");        // Saving integer
-//        editor.putFloat("key_name3", "float value");    // Saving float
-//        editor.putLong("key_name4", "long value");      // Saving long
-//        editor.putString("key_name5", "string value");  // Saving string
-//
-//// Save the changes in SharedPreferences
-//        editor.commit(); // commit changes
-
-//        SharedPreferences.Editor editor = sharedpreferences.edit();
-//        editor.putString(Username_session, "deni");
-//        editor.putString(Id_account_session, "2");
-//        editor.commit();
-
-//        sharedpreferences = getSharedPreferences(mypreference, Context.MODE_PRIVATE);
-//        if (sharedpreferences.contains(Name)) {
-//
-//        }
-//        if (sharedpreferences.contains(Email)) {
-//
-//
-//        }
     }
 
 // retrofit onclick
@@ -182,14 +145,10 @@ public class LoginActivity extends AppCompatActivity {
 
                         JSONObject jsonObj = jsonArr.getJSONObject(0);
 
+                        //success
+//                        Toast.makeText(LoginActivity.this, "1", Toast.LENGTH_SHORT).show();
 
 
-//                    progressBarAcm.setVisibility(View.GONE);
-//                    accountManagers = response.body().getChartAccountResult();
-//
-//                    accountManagerAdapter = new RecyclerAccountManagerAdapter(AccountManagerActivity.this, accountManagers);
-
-                        Toast.makeText(LoginActivity.this, "1", Toast.LENGTH_SHORT).show();
 
 //                    move to another page
                         Intent pindah = new Intent(LoginActivity.this, WorkgroupActivity.class);
@@ -214,8 +173,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 if (value.equals("0")){ // not working
 
-                    Toast.makeText(LoginActivity.this, "0", Toast.LENGTH_SHORT).show();
-
+//                    Toast.makeText(LoginActivity.this, "0", Toast.LENGTH_SHORT).show();
+                        Log.d("gagal@@", "Login");
                 }
             }
 

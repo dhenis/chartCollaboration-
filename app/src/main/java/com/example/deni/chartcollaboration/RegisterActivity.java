@@ -87,8 +87,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         RegisterAPI api  = retrofit.create(RegisterAPI.class); // panggil class di register adapter
 
-
-
         if(role.equals("change")){
 
         Call<ValueAccountManager> call =  api.RegisterChangningNewUser(username_var.getText().toString(), password_var.getText().toString(), email.getText().toString(),chartId);
@@ -107,13 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                             JSONArray jsonArr = new JSONArray(data);
 
-
                             JSONObject jsonObj = jsonArr.getJSONObject(0);
-
-
-
-//                    progressBarAcm.setVisibility(View.GONE);
-
 
 //                    move to another page
                             Intent pindah = new Intent(RegisterActivity.this, CreateActivity.class);
@@ -134,9 +126,9 @@ public class RegisterActivity extends AppCompatActivity {
                             pindah.putExtra("chartStatus",chartId);
                             pindah.putExtra("chartId",chartId);
                             pindah.putExtra("chartTimeCreated",update_time);
+//                            pindah.putExtra("workgroup_access",update_time);
 
                             startActivityForResult(pindah,1);
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -145,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     if (value.equals("0")){ // not working
 
-                        Toast.makeText(RegisterActivity.this, "0", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "01", Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -153,13 +145,13 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ValueAccountManager> call, Throwable t) {
 
-                    Toast.makeText(RegisterActivity.this, "Username Invalid", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Username Invalid1", Toast.LENGTH_SHORT).show();
 
                 }
             });
         }else{
 
-            Call<ValueAccountManager> call =  api.RegisterChangningNewUser(username_var.getText().toString(), password_var.getText().toString(), email.getText().toString(),chartId);
+            Call<ValueAccountManager> call =  api.RegisterNewUser(username_var.getText().toString(), password_var.getText().toString(), email.getText().toString());
             call.enqueue(new Callback<ValueAccountManager>() {
                 @Override
                 public void onResponse(Call<ValueAccountManager> call, Response<ValueAccountManager> response) {
@@ -176,13 +168,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                             JSONArray jsonArr = new JSONArray(data);
 
-
                             JSONObject jsonObj = jsonArr.getJSONObject(0);
-
-
-
-//                    progressBarAcm.setVisibility(View.GONE);
-
 
 //                    move to another page
                             Log.d("@@ROLE : ",role);
@@ -215,7 +201,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     if (value.equals("0")){ // not working
 
-                        Toast.makeText(RegisterActivity.this, "0", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "02", Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -223,14 +209,11 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ValueAccountManager> call, Throwable t) {
 
-                    Toast.makeText(RegisterActivity.this, "Username Invalid", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(RegisterActivity.this, "Username Invalid2", Toast.LENGTH_SHORT).show();
+                    Log.d("error on register2 @@:",String.valueOf(t));
                 }
             });
         }
-//        Log.e("call@@ : ", String.valueOf(call));
-
-
 
     }
 }

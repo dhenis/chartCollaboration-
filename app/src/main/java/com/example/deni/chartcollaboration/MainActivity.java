@@ -55,6 +55,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ButterKnife.bind(this);
+        //session setting
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.clear();
+        editor.commit(); // commit changes
+
+        editor.putString("role_session", "subscriber");  // Saving string
+
+        editor.commit();
+
+        String role_session = pref.getString("role_session",null);
 
 
+    }
 }
