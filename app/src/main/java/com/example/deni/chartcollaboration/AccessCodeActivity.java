@@ -35,6 +35,9 @@ public class AccessCodeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_access_code);
         ButterKnife.bind(this);
+
+        Toast.makeText(AccessCodeActivity.this, "Insert access code to edit the chart", Toast.LENGTH_SHORT).show();
+
     }
 
     @OnClick(R.id.accessButton)

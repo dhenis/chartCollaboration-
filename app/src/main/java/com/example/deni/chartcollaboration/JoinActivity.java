@@ -63,8 +63,14 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
     public static int iteration = 1; // make sure hanya 1 iteration
 
+    Thread t1 = new Thread(new Task1());
+
+    public static String realtimeCount = "0"; // make sure hanya 1 iteration
+
     public static ArrayList<Entry> yVals = new ArrayList<Entry>();
 
+
+    volatile boolean stop = false;
 
     String x_var, y_var, chart_id_var, category_var;
 
@@ -182,8 +188,12 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
-
+    realtimeCount = "0";
         ButterKnife.bind(this);
+
+        t1.start();
+
+
 
         writeTable();
         Intent intent = getIntent();
@@ -220,8 +230,10 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
         loadData(); // panggil fungsi yang dibawah
 
+//        feedMultiple(); // load data included
 
-// -- ini ---
+
+        // -- ini ---
 //        mChart.setDragEnabled(true);
 //        mChart.setScaleEnabled(true);
 //
@@ -433,6 +445,7 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
                     String value = response.body().getValue();
 
 
+
                     progressBar.setVisibility(View.GONE);
 
                     if (value.equals("1")) { // nilai satu means bisa menghubungi server
@@ -448,14 +461,22 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
                             JSONArray jsonArr = new JSONArray(data);
 
-
+                            String berapa = "0";
                             for (int i = 0; i < jsonArr.length(); i++) {
 
                                 JSONObject jsonObj = jsonArr.getJSONObject(i);
 
                                 addEntry(Integer.parseInt(jsonObj.getString("y")));
 
+                                 berapa = jsonObj.getString("id");
+
                             }
+
+// /
+
+                            realtimeCount = berapa;
+
+                            Log.d("realcount LoadData@@:",realtimeCount);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -751,7 +772,6 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 //            ILineDataSet set = data.getDataSetByIndex(0);
 //            Entry e = set.getEntryForXIndex(set.getEntryCount() - 1);
 
-            Log.d("datasetnya @@", String.valueOf(data.getDataSetByIndex(0).getEntryCount()));
 //            Log.d("datanya @@", String.valueOf(data.getDataSetByIndex(data.getDataSetCount() - 1)));
 
             for(int i=1;i<=data.getDataSetByIndex(0).getEntryCount();i++){
@@ -817,7 +837,9 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         //float volume= (e.getVal()/130)*5;
         mySound.play(raygunID, 1, 1, 1, 0, volume);
 //        Toast.makeText(this, "Value: "+e.toString(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "Value: "+String.valueOf(Math.round(e.getVal())), Toast.LENGTH_SHORT).show();
+
+        //see the val
+       // Toast.makeText(this, "Value: "+String.valueOf(Math.round(e.getVal())), Toast.LENGTH_SHORT).show();
 
 
     }
@@ -828,6 +850,32 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
     }
 //
 //
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("action", "onPause");
+
+        stop = true; // matikan thread
+        Thread.interrupted();
+
+        t1.interrupt();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("action", "onStop");
+
+        stop = true;
+
+        Thread.interrupted();
+//
+//        finish();
+//
+        t1.interrupt();
+//        t1.stop();
+    }
 
     @Override
     protected void onResume(){
@@ -849,6 +897,269 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 //
 //        /// code to update data then notify Adapter
 //        viewAdapter.notifyDataSetChanged();
+    }
+
+    public class Task1 implements Runnable {
+        public void run() {
+            while (!Thread.currentThread().isInterrupted()) {
+
+                    while ( !stop ) {
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+
+                                chart_id_var = chart_id.getText().toString();
+                                category_var = category.getText().toString();
+
+                                Retrofit retrofit = new Retrofit.Builder()
+                                        .baseUrl(URL)
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .build();
+
+                                RegisterAPI api = retrofit.create(RegisterAPI.class);
+
+                                Call<Value> call = api.getLastChartById(chart_id_var);
+
+                                call.enqueue(new Callback<Value>(){
+                                    @Override
+                                    public void onResponse(Call<Value> call, Response<Value> response) {
+                                        String value = response.body().getValue();
+                                        String message = response.body().getMessage();
+
+                                        if(value.equals("1")){
+
+                                            String data = new Gson().toJson(response.body().getResult()).toString();
+
+//                                        chart_list = response.body().getResult();
+//
+//                                        viewAdapter = new RecyclerViewAdapter(JoinActivity.this, chart_list);
+//                                        recyclerView.setAdapter(viewAdapter);
+
+                                            try {
+
+                                                JSONArray jsonArr = new JSONArray(data);
+
+
+                                                for (int i = 0; i < jsonArr.length(); i++) {
+
+                                                    JSONObject jsonObj = jsonArr.getJSONObject(i);
+
+//                                                addEntry(Integer.parseInt(jsonObj.getString("y")));
+                                                    if(realtimeCount.equals(jsonObj.getString("id"))){
+
+                                                        Log.d("@@realtime","no update");
+
+                                                    }else{
+                                                        Log.d("@@realtime","update");
+                                                        Log.d("@@realtimevar",realtimeCount);
+                                                        Log.d("@@id",jsonObj.getString("id"));
+
+
+                                                        realtimeCount = jsonObj.getString("id");
+
+                                                        //-- logika1
+//                                                    removeAllSet();
+////                                                    removeDataSet();
+//                                                    loadData();
+                                                        Toast.makeText(JoinActivity.this, "Chart updated", Toast.LENGTH_SHORT).show();
+//---
+
+
+                                                        // refresth logika2
+
+                                                        Intent intent = getIntent();
+                                                        String chartName = intent.getStringExtra("chartName");
+                                                        String chartId = intent.getStringExtra("chartId");
+
+                                                        String chart_id_var = chart_id.getText().toString();
+
+                                                        Intent pindah = new Intent(JoinActivity.this, JoinActivity.class);
+
+                                                        pindah.putExtra("chartName",chart_id_var);
+                                                        pindah.putExtra("chartId",chart_id_var);
+
+                                                        startActivityForResult(pindah,1);
+//--
+
+
+
+
+                                                    }
+
+                                                }
+
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+
+
+
+                                        }else{
+                                            Toast.makeText(JoinActivity.this, "fail to remove data", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Value> call, Throwable t) {
+                                        t.printStackTrace();
+
+//                                    Toast.makeText(JoinActivity.this,"Error Connection",Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+
+
+
+
+
+                            }
+                        });
+
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+
+            }
+        }
+    }
+
+
+
+    private void feedMultiple() {
+
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                while ( !stop ) {
+
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            chart_id_var = chart_id.getText().toString();
+                            category_var = category.getText().toString();
+
+                            Retrofit retrofit = new Retrofit.Builder()
+                                    .baseUrl(URL)
+                                    .addConverterFactory(GsonConverterFactory.create())
+                                    .build();
+
+                            RegisterAPI api = retrofit.create(RegisterAPI.class);
+
+                            Call<Value> call = api.getLastChartById(chart_id_var);
+
+                            call.enqueue(new Callback<Value>(){
+                                @Override
+                                public void onResponse(Call<Value> call, Response<Value> response) {
+                                    String value = response.body().getValue();
+                                    String message = response.body().getMessage();
+
+                                    if(value.equals("1")){
+
+                                        String data = new Gson().toJson(response.body().getResult()).toString();
+
+//                                        chart_list = response.body().getResult();
+//
+//                                        viewAdapter = new RecyclerViewAdapter(JoinActivity.this, chart_list);
+//                                        recyclerView.setAdapter(viewAdapter);
+
+                                        try {
+
+                                            JSONArray jsonArr = new JSONArray(data);
+
+
+                                            for (int i = 0; i < jsonArr.length(); i++) {
+
+                                                JSONObject jsonObj = jsonArr.getJSONObject(i);
+
+//                                                addEntry(Integer.parseInt(jsonObj.getString("y")));
+                                                if(realtimeCount.equals(jsonObj.getString("id"))){
+
+                                                    Log.d("@@realtime","no update");
+
+                                                }else{
+                                                    Log.d("@@realtime","update");
+                                                    Log.d("@@realtimevar",realtimeCount);
+                                                    Log.d("@@id",jsonObj.getString("id"));
+
+
+                                                    realtimeCount = jsonObj.getString("id");
+
+                                                    //-- logika1
+//                                                    removeAllSet();
+////                                                    removeDataSet();
+//                                                    loadData();
+                                                    Toast.makeText(JoinActivity.this, "Chart updated", Toast.LENGTH_SHORT).show();
+//---
+
+
+                                                    // refresth logika2
+
+                                                    Intent intent = getIntent();
+                                                    String chartName = intent.getStringExtra("chartName");
+                                                    String chartId = intent.getStringExtra("chartId");
+
+                                                    String chart_id_var = chart_id.getText().toString();
+
+                                                    Intent pindah = new Intent(JoinActivity.this, JoinActivity.class);
+
+                                                    pindah.putExtra("chartName",chart_id_var);
+                                                    pindah.putExtra("chartId",chart_id_var);
+
+                                                    startActivityForResult(pindah,1);
+//--
+
+
+
+
+                                                }
+
+                                            }
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+
+
+                                    }else{
+                                        Toast.makeText(JoinActivity.this, "fail to remove data", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Value> call, Throwable t) {
+                                    t.printStackTrace();
+
+//                                    Toast.makeText(JoinActivity.this,"Error Connection",Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+
+
+
+
+                        }
+                    });
+
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
 }

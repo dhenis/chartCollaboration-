@@ -58,6 +58,10 @@ public interface RegisterAPI {
     @POST ("view_last_chart.php")// input data android ke DB
     Call<Value> getLastValueFromChart( @Field("chart_id") String chart_id );
 
+    @FormUrlEncoded
+    @POST ("getLastChartById.php")// input data android ke DB
+    Call<Value> getLastChartById( @Field("chart_id") String chart_id );
+
 
     @FormUrlEncoded
     @POST ("account_manager_view.php")// input data android ke DB

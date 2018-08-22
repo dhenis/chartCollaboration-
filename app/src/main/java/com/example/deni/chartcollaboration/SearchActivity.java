@@ -1,10 +1,13 @@
 package com.example.deni.chartcollaboration;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -36,6 +39,28 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
+
+        setTitle("Search page");
+
+        // acction when press enter
+        searchForm.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == android.view.KeyEvent.ACTION_DOWN) && (keyCode == android.view.KeyEvent.KEYCODE_ENTER)) {
+                    //Toast.makeText(CreateActivity.this, editY.getText(), Toast.LENGTH_SHORT).show();
+                    // same with press button
+
+                    loadChartManager();
+
+                    InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(searchForm.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     @OnClick(R.id.searchButton)

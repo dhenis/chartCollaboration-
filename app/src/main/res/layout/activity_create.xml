@@ -19,11 +19,12 @@
         android:id="@+id/editX"
         android:layout_width="50dip"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/AccessCode"
+        android:layout_alignRight="@+id/AccessCode"
         android:layout_below="@+id/chart1"
-        android:layout_toEndOf="@+id/editY"
-        android:layout_toRightOf="@+id/editY"
         android:digits="0123456789+"
         android:hint="X"
+        android:imeOptions="actionDone"
         android:inputType="number"
         android:text="0"
         android:visibility="invisible" />
@@ -32,9 +33,12 @@
         android:id="@+id/editY"
         android:layout_width="70dip"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button_add"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_toLeftOf="@+id/button_add"
+        android:layout_toStartOf="@+id/button_add"
         android:digits="0123456789+"
         android:hint="Y"
         android:inputType="number" />
@@ -54,11 +58,9 @@
         android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="18dp"
-        android:layout_marginStart="18dp"
-        android:layout_toEndOf="@+id/chart_id"
-        android:layout_toRightOf="@+id/chart_id"
         android:text="0"
         android:visibility="invisible" />
 
@@ -68,39 +70,40 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/button_delete"
         android:layout_alignBottom="@+id/button_delete"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/button_delete"
+        android:layout_toStartOf="@+id/button_delete"
         android:text="Add" />
 
     <Button
         android:id="@+id/button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button_Author"
-        android:layout_alignBottom="@+id/button_Author"
-        android:layout_toEndOf="@+id/button_add"
-        android:layout_toRightOf="@+id/button_add"
+        android:layout_alignBaseline="@+id/editY"
+        android:layout_alignBottom="@+id/editY"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:text="Del" />
 
     <Button
         android:id="@+id/button_Author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editX"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_toLeftOf="@+id/button_back"
-        android:layout_toStartOf="@+id/button_back"
+        android:layout_alignBaseline="@+id/editX"
+        android:layout_alignBottom="@+id/editX"
+        android:layout_alignEnd="@+id/editY"
+        android:layout_alignRight="@+id/editY"
         android:text="Play" />
 
     <Button
         android:id="@+id/button_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button_Author"
-        android:layout_alignBottom="@+id/button_Author"
+        android:layout_alignBaseline="@+id/editX"
+        android:layout_alignBottom="@+id/editX"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginEnd="33dp"
+        android:layout_marginRight="33dp"
         android:text="Back"
         tools:layout_editor_absoluteX="95dp"
         tools:layout_editor_absoluteY="231dp" />
@@ -119,18 +122,17 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/button_add"
-        android:layout_marginTop="13dp"
+        android:layout_below="@+id/button_Author"
         android:visibility="visible" />
 
     <TextView
         android:id="@+id/AccessCode"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/category"
-        android:layout_alignBottom="@+id/category"
-        android:layout_alignLeft="@+id/editX"
-        android:layout_alignStart="@+id/editX"
+        android:layout_alignBaseline="@+id/button_add"
+        android:layout_alignBottom="@+id/button_add"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:text="Code:" />
 
 

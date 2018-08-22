@@ -1,6 +1,7 @@
 package com.example.deni.chartcollaboration;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -12,7 +13,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -88,6 +91,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
     @BindView(R.id.category) EditText category;
 
 
+
 //    @BindView(R.id.button_add)Button btnviewAdd;
 
 
@@ -115,20 +119,8 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
     }
 
-
-    // simple karna pake butter knife
-//    @OnClick(R.id.button_add) void daftar(){
-//        Log.d("klik","saya coba");
-//
-//    }
-
-
     @OnClick(R.id.button_back)
     public void create(){
-
-
-//        Intent pindah2 = new Intent(CreateActivity.this, MainActivity.class);
-//        startActivityForResult(pindah2, 1 );
         onBackPressed();
     }
 
@@ -153,7 +145,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
         Log.d("##chart id##", chartId);
         setTitle("Author Page : chart"+chartId);
-        loadDataMahasiswa(); // panggil fungsi yang dibawah
+        loadData(); // panggil fungsi yang dibawah
 
 //        editYY = (EditText)findViewById(R.id.editY);
         btnAddData = (Button)findViewById(R.id.button_add);
@@ -181,9 +173,6 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         btnAddData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // masukkan
-
 
                 //Untuk menampilkan progress dialog
                 progress = new ProgressDialog(v.getContext());
@@ -300,7 +289,80 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 //                removeLastEntry();
 //            }
         });
-//
+
+
+        // acction when press enter
+        editY.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == android.view.KeyEvent.ACTION_DOWN) && (keyCode == android.view.KeyEvent.KEYCODE_ENTER)) {
+                    //Toast.makeText(CreateActivity.this, editY.getText(), Toast.LENGTH_SHORT).show();
+                    // same with press button
+
+                    //Untuk menampilkan progress dialog
+                    progress = new ProgressDialog(v.getContext());
+                    progress.setCancelable(false);
+                    progress.setMessage("Loading...");
+                    progress.show();
+
+                    final String x_var, y_var, chart_id_var, category_var;
+
+
+                    x_var = editX.getText().toString();
+                    y_var = editY.getText().toString();
+                    chart_id_var = chart_id.getText().toString();
+                    category_var = category.getText().toString();
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(URL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    RegisterAPI api = retrofit.create(RegisterAPI.class);
+                    Call<Value> call = api.daftar(x_var,y_var,chart_id_var,chart_id_var,category_var);
+
+                    call.enqueue(new Callback<Value>(){
+                        @Override
+                        public void onResponse(Call<Value> call, Response<Value> response) {
+                            String value = response.body().getValue();
+                            String message = response.body().getMessage();
+                            progress.dismiss();
+
+                            if(value.equals("1")){
+                                Toast.makeText(CreateActivity.this, "Data Added", Toast.LENGTH_SHORT).show();
+
+                                addEntry(Integer.parseInt(y_var));
+
+                                editY.setText(""); // set after submit the internet
+
+
+                            }else{
+                                Toast.makeText(CreateActivity.this, "failed to add data", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Value> call, Throwable t) {
+                            t.printStackTrace();
+                            progress.dismiss();
+                            Toast.makeText(CreateActivity.this,"Error Connection",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+
+                    //------
+
+                    InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(editY.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
         mp = MediaPlayer.create(this, R.raw.p1);
         btnviewAll.setOnClickListener(new View.OnClickListener() {
 
@@ -354,7 +416,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
 
     // untuk meload data mahasiswa
-    private void loadDataMahasiswa(){
+    private void loadData(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -468,7 +530,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
                         JSONObject jsonObj = jsonArr.getJSONObject(0);
 
-                        AccessCode.setText("AccessCode: "+ jsonObj.getString("access")); // set chart id
+                        AccessCode.setText("Code:"+ jsonObj.getString("access")); // set chart id
 
 //                        Toast.makeText(ChartManagerActivity.this, String.valueOf(jsonObj.getString("id")), Toast.LENGTH_SHORT).show();
 
@@ -692,9 +754,13 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
         mySound.play(raygunID, 1, 1, 1, 0, volume);
 
-        Toast.makeText(this, "Value: "+String.valueOf(Math.round(e.getVal())), Toast.LENGTH_SHORT).show();
-//
-//        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+
+        // see ap
+
+//        Toast.makeText(this, "Value: "+String.valueOf(Math.round(e.getVal())), Toast.LENGTH_SHORT).show();
+
+
+
 
     }
 
@@ -710,7 +776,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         super.onResume();
         Log.d("action", "OnResume");
 //        writeTable();
-//        loadDataMahasiswa();
+//        loadData();
 //        /// code to update data then notify Adapter
 //        viewAdapter.notifyDataSetChanged();
     }
@@ -721,7 +787,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
         Log.d("action", "OnRestart");
 //        writeTable();
-//        loadDataMahasiswa();
+//        loadData();
 //
 //        /// code to update data then notify Adapter
 //        viewAdapter.notifyDataSetChanged();

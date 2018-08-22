@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -60,23 +62,41 @@ public class LoginActivity extends AppCompatActivity {
         String role_session = pref.getString("role_session",null);
         Log.d("@@ session rolenya :",pref.getString("role_session",null));
 
+
+
+
+        // acction when press enter
+        password_var.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == android.view.KeyEvent.ACTION_DOWN) && (keyCode == android.view.KeyEvent.KEYCODE_ENTER)) {
+                    //Toast.makeText(CreateActivity.this, editY.getText(), Toast.LENGTH_SHORT).show();
+                    // same with press button
+
+
+                    loadAccountManager();
+
+                    InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(password_var.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
 // retrofit onclick
     @OnClick(R.id.button_login)
     public void login(){
        Log.v("@@Button Login","button login works");
-//        Intent pindah = new Intent(LoginActivity.this, CreateActivity.class);
-//        startActivityForResult(pindah,1);
-
 
         loadAccountManager();
 
-
-
-
-
     }
+
+
 
     // retrofit onclick
     @OnClick(R.id.button_back)
@@ -146,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject jsonObj = jsonArr.getJSONObject(0);
 
                         //success
-//                        Toast.makeText(LoginActivity.this, "1", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Welcome, access granted ", Toast.LENGTH_SHORT).show();
 
 
 
