@@ -138,9 +138,7 @@ public class WorkgroupAddActivity extends AppCompatActivity {
 
     @OnClick(R.id.backButtonWorkgroup)
     public void join(){
-////        Log.v("ini jalan","jajajaj");
-//        Intent pindah = new Intent(WorkgroupAddActivity.this, WorkgroupActivity.class);
-//        startActivityForResult(pindah,1);
+
         onBackPressed();
     }
         @Override

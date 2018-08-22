@@ -112,10 +112,7 @@ public class SearchActivity extends AppCompatActivity {
                 String data = new Gson().toJson(response.body().getChartManagerResult()).toString();
                 String lastElement = new Gson().toJson(response.body().getLastElement()).toString();
 
-//                Toast.makeText(ChartManagerActivity.this, lastElement, Toast.LENGTH_SHORT).show();
-
                 Log.e("@@ Last element : ", lastElement);
-//                Log.e("@@ data: ", String.valueOf(data));
 
                 if (value.equals("1")) {
 
@@ -123,18 +120,8 @@ public class SearchActivity extends AppCompatActivity {
 
                         JSONArray jsonArr = new JSONArray(data);
 
-//
-//                        for (int i = 0; i < jsonArr.length(); i++) {
-//
-//                            JSONObject jsonObj = jsonArr.getJSONObject(i);
-//
-//                            Toast.makeText(ChartManagerActivity.this, String.valueOf(jsonObj), Toast.LENGTH_SHORT).show();
-//
-//                        }
-
                         JSONObject jsonObj = jsonArr.getJSONObject(0);
 
-//                        Toast.makeText(ChartManagerActivity.this, String.valueOf(jsonObj.getString("id")), Toast.LENGTH_SHORT).show();
 
                         Log.d("dari array: ", String.valueOf(jsonObj.getString("id_chart_manager")));
 
@@ -158,20 +145,11 @@ public class SearchActivity extends AppCompatActivity {
                         startActivityForResult(pindah,1);
                         Log.d("@@pindah: ", String.valueOf(pindah));
 
-                        //                        array = new JSONArray(new Gson().toJson(response.body().getResult()));
-
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-
-//                    chartManagerAdapter = new RecyclerChartManagerAdapter(ChartManagerActivity.this, chartManagers);
-//
-//                    Toast.makeText(ChartManagerActivity.this, message, Toast.LENGTH_SHORT).show();
-//
-//                    recyclerViewCrm.setAdapter(chartManagerAdapter);
                 }
             }
 
@@ -181,7 +159,6 @@ public class SearchActivity extends AppCompatActivity {
                 Toast.makeText(SearchActivity.this, "Data Not found", Toast.LENGTH_SHORT).show();
                 Log.d( "@@trow:" , String.valueOf(t));
                 Log.d( "@@call:" , String.valueOf(call));
-//                progressBarCrm.setVisibility(View.GONE);
 
             }
 

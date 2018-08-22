@@ -97,13 +97,7 @@ public class AccessCodeActivity extends AppCompatActivity {
                 String value = response.body().getValue();
                 String message = response.body().getMessage();
                 String data = new Gson().toJson(response.body().getWorkgroupResult()).toString();
-//                String lastElement = new Gson().toJson(response.body().getWorkgroupResult()).toString();
-
-//                Toast.makeText(ChartManagerActivity.this, lastElement, Toast.LENGTH_SHORT).show();
-
-
                 Log.e("@@ Last element : ", data);
-//                Log.e("@@ data: ", String.valueOf(data));
 
                 if (value.equals("1")) {
 
@@ -112,10 +106,6 @@ public class AccessCodeActivity extends AppCompatActivity {
                         JSONArray jsonArr = new JSONArray(data);
 
                         JSONObject jsonObj = jsonArr.getJSONObject(0);
-
-//                        Toast.makeText(ChartManagerActivity.this, String.valueOf(jsonObj.getString("id")), Toast.LENGTH_SHORT).show();
-
-//                        Log.d("dari array: ", String.valueOf(jsonObj.getString("id_chart_manager")));
 
                         // fungsi pindah
                         Intent pindah = new Intent(AccessCodeActivity.this, RegisterActivity.class);
@@ -134,20 +124,11 @@ public class AccessCodeActivity extends AppCompatActivity {
 
                         startActivityForResult(pindah,1);
 
-                        //                        array = new JSONArray(new Gson().toJson(response.body().getResult()));
-
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-
-//                    chartManagerAdapter = new RecyclerChartManagerAdapter(ChartManagerActivity.this, chartManagers);
-//
-//                    Toast.makeText(ChartManagerActivity.this, message, Toast.LENGTH_SHORT).show();
-//
-//                    recyclerViewCrm.setAdapter(chartManagerAdapter);
                 }
             }
 

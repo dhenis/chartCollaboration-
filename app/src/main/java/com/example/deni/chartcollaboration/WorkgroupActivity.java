@@ -71,17 +71,6 @@ public class WorkgroupActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = pref.edit();
         Log.d("@@ session rolenya :",pref.getString("role_session",null));
 
-//
-//
-//        if(role.equals("subscriber")){
-//
-//            backButton.setText("Back");
-//
-//        }else{
-//
-//            backButton.setText("Log Out");
-//
-//        }
         loadWorkgroup();
 
     }
@@ -90,10 +79,7 @@ public class WorkgroupActivity extends AppCompatActivity {
     public void create(){
 
         Intent intent = getIntent();
-//from login
-//        pindah.putExtra("username",jsonObj.getString("username"));
-//        pindah.putExtra("id_account",jsonObj.getString("id_account"));
-//        pindah.putExtra("role","author");
+
 
 
         String username = intent.getStringExtra("username");
@@ -114,26 +100,7 @@ public class WorkgroupActivity extends AppCompatActivity {
 
     @OnClick(R.id.backButtonWorkgroup)
     public void back(){
-//        Intent intent = getIntent();
-//
-//        String username = intent.getStringExtra("username");
-//        String id_account = intent.getStringExtra("id_account");
-//        String role = intent.getStringExtra("role");
-//
-//        if(role.equals("subscriber")){
-//
-//            Intent pindah = new Intent(WorkgroupActivity.this, SearchActivity.class);
-//
-//            startActivityForResult(pindah,1);
-//
-//
-//        }else{
-//
-//            Intent pindah = new Intent(WorkgroupActivity.this, SearchActivity.class);
-//
-//            startActivityForResult(pindah,1);
-//
-//        }
+
 
         onBackPressed();
 
@@ -223,10 +190,6 @@ public class WorkgroupActivity extends AppCompatActivity {
         });
 
     }
-
-
-
-
 
 
 }

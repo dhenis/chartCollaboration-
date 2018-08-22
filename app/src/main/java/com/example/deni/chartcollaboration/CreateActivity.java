@@ -136,7 +136,6 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         Intent intent = getIntent();
         String chartName = intent.getStringExtra("chartName");
         String chartId = intent.getStringExtra("chartId");
-//        String workgroup_access = intent.getStringExtra("workgroup_access");
 
         chart_id.setText(chartId); // set chart id
 
@@ -147,7 +146,6 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         setTitle("Author Page : chart"+chartId);
         loadData(); // panggil fungsi yang dibawah
 
-//        editYY = (EditText)findViewById(R.id.editY);
         btnAddData = (Button)findViewById(R.id.button_add);
         btnviewAll = (Button)findViewById(R.id.button_Author);
         btnDelete= (Button)findViewById(R.id.button_delete);
@@ -164,9 +162,6 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         // add an empty data object
         mChart.setData(new LineData());
         mChart.setScaleEnabled(false);
-
-//        mChart.getXAxis().setDrawLabels(false);
-//        mChart.getXAxis().setDrawGridLines(false);
 
         mChart.invalidate();
 
@@ -458,18 +453,9 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
                                 JSONObject jsonObj = jsonArr.getJSONObject(i);
 
-//                                System.out.println(i); // ini masuk ke chart
                                 addEntry(Integer.parseInt(jsonObj.getString("y")));
 
-//                                Log.d("isi: ",jsonObj.getString("x"));
-
                             }
-//                            Log.d("dari array length: ", String.valueOf(iteration));
-
-                            //                        array = new JSONArray(new Gson().toJson(response.body().getResult()));
-
-
-                            //                        Log.d("dari array: ",array.toString());
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -514,13 +500,8 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                 String value = response.body().getValue();
                 String message = response.body().getMessage();
                 String data = new Gson().toJson(response.body().getWorkgroupResult()).toString();
-//                String lastElement = new Gson().toJson(response.body().getWorkgroupResult()).toString();
-
-//                Toast.makeText(ChartManagerActivity.this, lastElement, Toast.LENGTH_SHORT).show();
-
 
                 Log.e("@@ Last element : ", data);
-//                Log.e("@@ data: ", String.valueOf(data));
 
                 if (value.equals("1")) {
 
@@ -532,40 +513,11 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
                         AccessCode.setText("Code:"+ jsonObj.getString("access")); // set chart id
 
-//                        Toast.makeText(ChartManagerActivity.this, String.valueOf(jsonObj.getString("id")), Toast.LENGTH_SHORT).show();
-
-//                        Log.d("dari array: ", String.valueOf(jsonObj.getString("id_chart_manager")));
-
-//                        // fungsi pindah
-//                        Intent pindah = new Intent(AccessCodeActivity.this, RegisterActivity.class);
-//
-//                        pindah.putExtra("username",String.valueOf(" "));
-//                        pindah.putExtra("id_account",String.valueOf(" "));
-//                        pindah.putExtra("role","change");
-//
-//
-//                        pindah.putExtra("chartId",chartId);
-//                        pindah.putExtra("id_workgroup",jsonObj.getString("id_workgroup"));
-//                        pindah.putExtra("name",jsonObj.getString("name"));
-//                        pindah.putExtra("access",jsonObj.getString("access"));
-//                        pindah.putExtra("update_time",jsonObj.getString("update_time"));
-//                        Log.d("@@pindah: ", String.valueOf(pindah));
-//
-//                        startActivityForResult(pindah,1);
-
-                        //                        array = new JSONArray(new Gson().toJson(response.body().getResult()));
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-
-//                    chartManagerAdapter = new RecyclerChartManagerAdapter(ChartManagerActivity.this, chartManagers);
-//
-//                    Toast.makeText(ChartManagerActivity.this, message, Toast.LENGTH_SHORT).show();
-//
-//                    recyclerViewCrm.setAdapter(chartManagerAdapter);
                 }
             }
 
@@ -640,8 +592,6 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                 Entry e = set.getEntryForXIndex(set.getEntryCount() - 1);
 
                 data.removeEntry(e, 0);
-                // or remove by index
-                // mData.removeEntry(xIndex, dataSetIndex);
 
                 mChart.notifyDataSetChanged();
                 mChart.invalidate();
@@ -750,16 +700,8 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
         float volume= ((e.getVal()/(mChart.getYChartMax()-mChart.getYChartMin()))*5);
 
-        //float volume= (e.getVal()/130)*5;
 
         mySound.play(raygunID, 1, 1, 1, 0, volume);
-
-
-        // see ap
-
-//        Toast.makeText(this, "Value: "+String.valueOf(Math.round(e.getVal())), Toast.LENGTH_SHORT).show();
-
-
 
 
     }
@@ -768,19 +710,14 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
     public void onNothingSelected() {
 
     }
-//
-//
 
     @Override
     protected void onResume(){
         super.onResume();
         Log.d("action", "OnResume");
-//        writeTable();
-//        loadData();
-//        /// code to update data then notify Adapter
-//        viewAdapter.notifyDataSetChanged();
+
     }
-//
+
     @Override
     protected void onRestart() {
         super.onRestart();

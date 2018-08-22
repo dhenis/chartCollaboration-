@@ -75,10 +75,7 @@ public class AccountManagerActivity extends AppCompatActivity {
 
     @OnClick(R.id.backButton)
     public void Back(){
-//        Log.v("ini jalan","jajajaj");
-//        Intent pindah = new Intent(AccountManagerActivity.this, WorkgroupActivity.class);
-//        startActivityForResult(pindah,1);
-//
+
         onBackPressed();
 
     }
@@ -106,7 +103,6 @@ public class AccountManagerActivity extends AppCompatActivity {
                 String value = response.body().getValue();
                 Log.d( "@@onRespon" , String.valueOf(response.code()));
                 String message = response.body().getMessage();
-//                String data = new Gson().toJson(response.body().getChartManagerResult()).toString();
                 Log.e("@@ value: ",value);
                 Log.e("@@ message: ", String.valueOf(response.body().getMessage()));
                 Log.e("@@ result: ", String.valueOf(response.body().getChartAccountResult()));
@@ -114,15 +110,12 @@ public class AccountManagerActivity extends AppCompatActivity {
 
                 Log.e("@@ Last element : ", lastElement);
                 Log.e("@@ Last element 22: ", response.body().getLastElement().toString());
-//                Log.e("@@ data: ", String.valueOf(data));
-
                 if (value.equals("1")) {
                     progressBarAcm.setVisibility(View.GONE);
                     accountManagers = response.body().getChartAccountResult();
 
                     accountManagerAdapter = new RecyclerAccountManagerAdapter(AccountManagerActivity.this, accountManagers);
 
-//                    Toast.makeText(ChartManagerActivity.this, message, Toast.LENGTH_SHORT).show();
 
                     recyclerViewAcm.setAdapter(accountManagerAdapter);
                 }

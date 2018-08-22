@@ -50,8 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = pref.edit();
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("SessionPref", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
@@ -125,13 +123,6 @@ public class LoginActivity extends AppCompatActivity {
         pindah.putExtra("update_time","0");
 
         startActivityForResult(pindah,1);
-
-//
-//        loadAccountManager();
-
-
-
-
 
     }
 
