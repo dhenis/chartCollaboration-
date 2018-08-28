@@ -1,6 +1,7 @@
 package com.example.deni.chartcollaboration;
 
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,6 +9,10 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -68,6 +73,14 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
     public static String realtimeCount = "0"; // make sure hanya 1 iteration
 
     public static ArrayList<Entry> yVals = new ArrayList<Entry>();
+
+    // vibration
+
+
+    Vibrator vibrator;
+
+
+    // end of vibration
 
 
     volatile boolean stop = false;
@@ -193,6 +206,31 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
         t1.start();
 
+
+        // -- vibrate
+
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+        if (vibrator != null && vibrator.hasVibrator()) {
+
+           // vibrateFor500ms();
+
+//            customVibratePatternNoRepeat();
+
+//            customVibratePatternRepeatFromSpecificIndex();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                createOneShotVibrationUsingVibrationEffect();
+                createWaveFormVibrationUsingVibrationEffect();
+                createWaveFormVibrationUsingVibrationEffectAndAmplitude();
+            }
+
+        } else {
+            Toast.makeText(this, "Device does not support vibration", Toast.LENGTH_SHORT).show();
+        }
+
+
+        //
 
 
         writeTable();
@@ -759,7 +797,26 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
         float volume= ((e.getVal()/(mChart.getYChartMax()-mChart.getYChartMin()))*5);
-        mySound.play(raygunID, 1, 1, 1, 0, volume);
+        mySound.play(raygunID, 1, 1, 1, 0, volume);//        customVibratePatternNoRepeat();
+
+        // 500ms
+        morseVibrate((int) (e.getXIndex() +1));
+
+        Log.w("dataset x:",String.valueOf(dataSetIndex + 1));
+        Log.w("highligh x:",String.valueOf(dataSetIndex + 1));
+        Log.w("@@mChart.getXAxis() x:",String.valueOf(mChart.getXAxis()));
+        Log.w("@@mChart.getX() x:",String.valueOf(mChart.getX()));
+        Log.w("@@e.getX() x:",String.valueOf(e.getXIndex()));
+        Log.w("@@e.getData() x:",String.valueOf(e.getData()));
+        Log.w("@@e.getVal() x:",String.valueOf(e.getVal()));
+
+
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            createWaveFormVibrationUsingVibrationEffectAndAmplitude();
+//        }
+//        customVibratePatternRepeatFromSpecificIndex();
+
     }
 
     @Override
@@ -1041,5 +1098,91 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
             }
         }).start();
     }
+
+
+    // vibration
+
+    private void vibrateFor500ms() {
+        vibrator.vibrate(500);
+    }
+
+    private void customVibratePatternNoRepeat() {
+
+        // 0 : Start without a delay
+        // 400 : Vibrate for 400 milliseconds
+        // 200 : Pause for 200 milliseconds
+        // 400 : Vibrate for 400 milliseconds
+        long[] mVibratePattern = new long[]{0, 400, 200, 400};
+
+        // -1 : Do not repeat this pattern
+        // pass 0 if you want to repeat this pattern from 0th index
+        vibrator.vibrate(mVibratePattern, -1);
+
+    }
+
+
+    private void morseVibrate( int input) {
+
+        // 0 : Start without a delay
+        // 400 : Vibrate for 400 milliseconds
+        // 200 : Pause for 200 milliseconds
+        // 400 : Vibrate for 400 milliseconds
+        if(input %5 == 0){
+            int wave =input * 100;
+            long[] mVibratePattern = new long[]{0, wave, 50, wave};
+            vibrator.vibrate(mVibratePattern, -1);
+
+        }else{
+
+            vibrator.vibrate(100);
+
+        }
+
+
+        // -1 : Do not repeat this pattern
+        // pass 0 if you want to repeat this pattern from 0th index
+//        vibrator.vibrate(mVibratePattern, -1);
+
+    }
+
+
+    private void customVibratePatternRepeatFromSpecificIndex() {
+        long[] mVibratePattern = new long[]{0, 400, 800, 600, 800, 800, 800, 1000};
+
+        // 3 : Repeat this pattern from 3rd element of an array
+        vibrator.vibrate(mVibratePattern, 3);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createOneShotVibrationUsingVibrationEffect() {
+        // 1000 : Vibrate for 1 sec
+        // VibrationEffect.DEFAULT_AMPLITUDE - would perform vibration at full strength
+        VibrationEffect effect = VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE);
+        vibrator.vibrate(effect);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createWaveFormVibrationUsingVibrationEffect() {
+        long[] mVibratePattern = new long[]{0, 400, 1000, 600, 1000, 800, 1000, 1000};
+        // -1 : Play exactly once
+        VibrationEffect effect = VibrationEffect.createWaveform(mVibratePattern, -1);
+        vibrator.vibrate(effect);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createWaveFormVibrationUsingVibrationEffectAndAmplitude() {
+
+        long[] mVibratePattern = new long[]{0, 400, 800, 600, 800, 800, 800, 1000};
+        int[] mAmplitudes = new int[]{0, 255, 0, 255, 0, 255, 0, 255};
+        // -1 : Play exactly once
+
+        if (vibrator.hasAmplitudeControl()) {
+            VibrationEffect effect = VibrationEffect.createWaveform(mVibratePattern, mAmplitudes, -1);
+            vibrator.vibrate(effect);
+        }
+    }
+
+
+
 
 }
