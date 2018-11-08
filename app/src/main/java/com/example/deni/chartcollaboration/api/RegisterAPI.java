@@ -7,6 +7,7 @@ import retrofit2.http.POST;
 
 import com.example.deni.chartcollaboration.model.Value;
 import com.example.deni.chartcollaboration.model.ValueAccountManager;
+import com.example.deni.chartcollaboration.model.ValueBookmarks;
 import com.example.deni.chartcollaboration.model.ValueChartManager;
 import com.example.deni.chartcollaboration.model.ValueWorkgroups;
 
@@ -55,6 +56,10 @@ public interface RegisterAPI {
     Call<Value> view( @Field("chart_id") String chart_id );
 
     @FormUrlEncoded
+    @POST ("bookmark_view.php")// input data android ke DB
+    Call<ValueBookmarks> setBookmark( @Field("chart_id") String chart_id );
+
+    @FormUrlEncoded
     @POST ("view_last_chart.php")// input data android ke DB
     Call<Value> getLastValueFromChart( @Field("chart_id") String chart_id );
 
@@ -91,7 +96,13 @@ public interface RegisterAPI {
                                                @Field("password") String password ,
                                                @Field("email") String email,
                                                @Field("chart_id") String chart_id
+    );
 
+    @FormUrlEncoded
+    @POST ("bookmarks_insert.php")// input data android ke DB
+    Call<ValueBookmarks> InsertBookmarks(@Field("id") String id ,
+                                         @Field("value") String value,
+                                         @Field("id_charts") String id_charts
     );
 
     @GET ("view_all.php")// input data android ke DB

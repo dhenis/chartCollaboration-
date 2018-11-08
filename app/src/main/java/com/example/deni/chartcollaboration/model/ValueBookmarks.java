@@ -13,7 +13,7 @@ public class ValueBookmarks {
 
     String message;
 
-    List<AccountManager> result;
+    List<Bookmarks> result;
 
     public String getValue(){ return value;}
 
@@ -21,7 +21,11 @@ public class ValueBookmarks {
         return message;
     }
 
-    public List<AccountManager> getChartAccountResult(){
+    public List<Bookmarks> getChartAccountResult(){
+        return result;
+    } // retrive when using all data
+
+    public List<Bookmarks> getResult(){
         return result;
     } // retrive when using all data
 

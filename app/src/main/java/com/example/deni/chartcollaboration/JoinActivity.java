@@ -36,6 +36,7 @@ import com.example.deni.chartcollaboration.api.RegisterAPI;
 import com.example.deni.chartcollaboration.model.Charts;
 import com.example.deni.chartcollaboration.model.Value;
 import com.example.deni.chartcollaboration.model.ValueAccountManager;
+import com.example.deni.chartcollaboration.model.ValueBookmarks;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -274,6 +275,10 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
         loadData(); // panggil fungsi yang dibawah
 
+        setBookmark();
+
+
+        Log.d("bookmarknya@@$:", String.valueOf(tempContainers));
 // ---- new
 
         btnAddData.setOnClickListener(new View.OnClickListener() {
@@ -438,6 +443,71 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
     }
 
+    private void setBookmark(){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        chart_id_var = chart_id.getText().toString();
+
+        RegisterAPI api = retrofit.create(RegisterAPI.class);
+        Call<ValueBookmarks> call = api.setBookmark(chart_id_var);
+
+        Log.w("char_ id value @@$ :", String.valueOf(call));
+
+        call.enqueue(new Callback<ValueBookmarks>(){
+            @Override
+            public void onResponse(Call<ValueBookmarks> call, Response<ValueBookmarks> response) {
+
+                if (iteration == 1) { // make sure only once response
+
+                    String value = response.body().getValue();
+
+
+                    if (value.equals("1")) { // nilai satu means bisa menghubungi server
+
+                        String data = new Gson().toJson(response.body().getResult()).toString();
+                        Log.w("Data Bookmark @@$ :",data);
+                        try {
+
+                            JSONArray jsonArr = new JSONArray(data);
+
+                            String berapa = "0";
+                            for (int i = 0; i < jsonArr.length(); i++) {
+
+                                JSONObject jsonObj = jsonArr.getJSONObject(i);
+
+//                                addEntry(Integer.parseInt(jsonObj.getString("value")));
+                                tempContainers.add(Integer.parseInt(jsonObj.getString("value")));
+                                berapa = jsonObj.getString("id");
+
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ValueBookmarks> call, Throwable t) {
+
+                Toast.makeText(JoinActivity.this,"Error Network", Toast.LENGTH_SHORT).show();
+            }
+
+
+        });
+
+
+
+
+    }
 
     // untuk meload data mahasiswa
     private void loadData(){
@@ -808,7 +878,21 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
         float volume= ((e.getVal()/(mChart.getYChartMax()-mChart.getYChartMin()))*5);
+
+        // play sound
         mySound.play(raygunID, 1, 1, 1, 0, volume);//        customVibratePatternNoRepeat();
+
+
+
+
+        // play ketika ada bookmarks
+
+        if(tempContainers.contains(e.getVal())){
+
+            customVibratePatternNoRepeat();
+
+        }
+
 
         // 500ms
         morseVibrate((int) (e.getXIndex() +1));
@@ -956,9 +1040,9 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
             mChart.highlightValues(null); // or highlightTouch(null) for callback to onNothingSelected(...)
     }
     @Override
-    public void onChartLongPressed(MotionEvent me) {
+    public void onChartLongPressed(final MotionEvent me) {
         Log.i("LongPress", "Chart longpressed.");
-        Entry h = mChart.getEntryByTouchPoint(me.getX(), me.getY());
+        final Entry h = mChart.getEntryByTouchPoint(me.getX(), me.getY());
         int xIndex = h.getXIndex();
         tempContainers.add((int) h.getVal());
 
@@ -976,7 +1060,7 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         alertDialogBuilder.setTitle("Bookmark Dialog");
         alertDialogBuilder.setMessage("Do you want to bookmark this point?");
         alertDialogBuilder.setCancelable(false);
-        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton("Bookmark This", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
 
@@ -985,10 +1069,57 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 //                btnviewAll.performClick();
 //                mChart.setOnChartValueSelectedListener();
 
+                // save to db
 
+                x_var = editX.getText().toString();
+                y_var = editY.getText().toString();
+                chart_id_var = chart_id.getText().toString();
+                category_var = category.getText().toString();
+
+
+
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                RegisterAPI api = retrofit.create(RegisterAPI.class);
+                Call<ValueBookmarks> call = api.InsertBookmarks("1",String.valueOf(h.getVal()),chart_id_var);
+
+                call.enqueue(new Callback<ValueBookmarks>(){
+                    @Override
+                    public void onResponse(Call<ValueBookmarks> call, Response<ValueBookmarks> response) {
+                        String value = response.body().getValue();
+                        String message = response.body().getMessage();
+
+                        if(value.equals("1")){
+
+
+                            // masukkan ke bookmark array
+
+                            tempContainers.add((int) h.getVal());
+
+                        }else{
+//                            Toast.makeText(CreateActivity.this, "failed to add data", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ValueBookmarks> call, Throwable t) {
+                        t.printStackTrace();
+//                        progress.dismiss();
+//                        Toast.makeText(CreateActivity.this,"Error Connection",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+                // end of save  to Db
 
             }
-        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+        }).setNegativeButton("Play", new DialogInterface.OnClickListener() {
+
+
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
