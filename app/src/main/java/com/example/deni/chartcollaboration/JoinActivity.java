@@ -898,7 +898,14 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
 
         // 500ms
+
+        // rubah disini untuk mengganti interaksi pada saat di bookmark
+        //
+
         morseVibrate((int) (e.getXIndex() +1));
+
+        //
+
 
         Log.w("dataset x:",String.valueOf(dataSetIndex + 1));
 
@@ -1041,6 +1048,108 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         // un-highlight values after the gesture is finished and no single-tap
         if(lastPerformedGesture != ChartTouchListener.ChartGesture.SINGLE_TAP)
             mChart.highlightValues(null); // or highlightTouch(null) for callback to onNothingSelected(...)
+
+
+        if(me.getY() <=80){ // dungdungdung
+
+
+
+            Log.i("LongPress", "Chart longpressed.");
+            final Entry h = mChart.getEntryByTouchPoint(me.getX(), me.getY());
+            int xIndex = h.getXIndex();
+            tempContainers.add((int) h.getVal());
+
+
+            Log.w("LongPress@@! getIndex", String.valueOf(xIndex));
+            Log.w("LongPress@@! getVal", String.valueOf(h.getVal()));
+            Log.w("LongPress@@! getData", String.valueOf(h.getData()));
+            Log.w("LongPress@@! getX", String.valueOf(me.getX()));
+            Log.w("LongPress@@! getY", String.valueOf(me.getY()));
+            Log.w("tempContainers@@! TempY", String.valueOf(tempContainers));
+
+
+            AlertDialog.Builder alertDialogBuilder;
+            alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Bookmark Dialog");
+            alertDialogBuilder.setMessage("Do you want to bookmark this point?");
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setPositiveButton("Bookmark This", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+
+
+
+//                btnviewAll.performClick();
+//                mChart.setOnChartValueSelectedListener();
+
+                    // save to db
+
+                    x_var = editX.getText().toString();
+                    y_var = editY.getText().toString();
+                    chart_id_var = chart_id.getText().toString();
+                    category_var = category.getText().toString();
+
+
+
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(URL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    RegisterAPI api = retrofit.create(RegisterAPI.class);
+                    Call<ValueBookmarks> call = api.InsertBookmarks("1",String.valueOf(h.getVal()),chart_id_var);
+
+                    call.enqueue(new Callback<ValueBookmarks>(){
+                        @Override
+                        public void onResponse(Call<ValueBookmarks> call, Response<ValueBookmarks> response) {
+                            String value = response.body().getValue();
+                            String message = response.body().getMessage();
+
+                            if(value.equals("1")){
+
+
+                                // masukkan ke bookmark array
+
+                                tempContainers.add((int) h.getVal());
+
+                            }else{
+//                            Toast.makeText(CreateActivity.this, "failed to add data", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ValueBookmarks> call, Throwable t) {
+                            t.printStackTrace();
+//                        progress.dismiss();
+//                        Toast.makeText(CreateActivity.this,"Error Connection",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+                    // end of save  to Db
+
+                }
+            }).setNegativeButton("The number is: "+String.valueOf((int) h.getVal()), new DialogInterface.OnClickListener() {
+
+
+
+
+
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+
+
+        }
+
+
+
+
     }
     @Override
     public void onChartLongPressed(final MotionEvent me) {
@@ -1145,97 +1254,6 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         Log.i("DoubleTap", "Chart double-tapped.");
 
 
-        Log.i("LongPress", "Chart longpressed.");
-        final Entry h = mChart.getEntryByTouchPoint(me.getX(), me.getY());
-        int xIndex = h.getXIndex();
-        tempContainers.add((int) h.getVal());
-
-
-        Log.w("LongPress@@! getIndex", String.valueOf(xIndex));
-        Log.w("LongPress@@! getVal", String.valueOf(h.getVal()));
-        Log.w("LongPress@@! getData", String.valueOf(h.getData()));
-        Log.w("LongPress@@! getX", String.valueOf(me.getX()));
-        Log.w("LongPress@@! getY", String.valueOf(me.getY()));
-        Log.w("tempContainers@@! TempY", String.valueOf(tempContainers));
-
-
-        AlertDialog.Builder alertDialogBuilder;
-        alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Bookmark Dialog");
-        alertDialogBuilder.setMessage("Do you want to bookmark this point?");
-        alertDialogBuilder.setCancelable(false);
-        alertDialogBuilder.setPositiveButton("Bookmark This", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-
-
-
-
-//                btnviewAll.performClick();
-//                mChart.setOnChartValueSelectedListener();
-
-                // save to db
-
-                x_var = editX.getText().toString();
-                y_var = editY.getText().toString();
-                chart_id_var = chart_id.getText().toString();
-                category_var = category.getText().toString();
-
-
-
-
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-
-                RegisterAPI api = retrofit.create(RegisterAPI.class);
-                Call<ValueBookmarks> call = api.InsertBookmarks("1",String.valueOf(h.getVal()),chart_id_var);
-
-                call.enqueue(new Callback<ValueBookmarks>(){
-                    @Override
-                    public void onResponse(Call<ValueBookmarks> call, Response<ValueBookmarks> response) {
-                        String value = response.body().getValue();
-                        String message = response.body().getMessage();
-
-                        if(value.equals("1")){
-
-
-                            // masukkan ke bookmark array
-
-                            tempContainers.add((int) h.getVal());
-
-                        }else{
-//                            Toast.makeText(CreateActivity.this, "failed to add data", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ValueBookmarks> call, Throwable t) {
-                        t.printStackTrace();
-//                        progress.dismiss();
-//                        Toast.makeText(CreateActivity.this,"Error Connection",Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-                // end of save  to Db
-
-            }
-        }).setNegativeButton("Play", new DialogInterface.OnClickListener() {
-
-
-
-
-
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-
-
-
 
     }
 
@@ -1247,6 +1265,16 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
     @Override
     public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
         Log.i("Fling", "Chart flinged. VeloX: " + velocityX + ", VeloY: " + velocityY);
+
+        Log.w("Gesture@@1", "START, x@@#: " + me1.getX() + ", y@@#: " + me1.getY());
+        if(me2.getY()< (me2.getY())){
+
+            Log.i("Fling@@@", "Chart flinged. VeloX: " + velocityX + ", VeloY: " + velocityY);
+            Toast.makeText(JoinActivity.this, "Flinng logic on", Toast.LENGTH_SHORT).show();
+
+
+        }
+
     }
 
     @Override
