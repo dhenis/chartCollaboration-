@@ -1,6 +1,7 @@
 package com.example.deni.chartcollaboration;
 
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.deni.chartcollaboration.adapter.RecyclerViewAdapter;
@@ -74,6 +76,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class JoinActivity extends AppCompatActivity implements OnChartValueSelectedListener, OnChartGestureListener {
 
+    private RelativeLayout relativeLayout;
     public static final String URL = "http://dhenis.com/charts/";
 
     public static int iteration = 1; // make sure hanya 1 iteration
@@ -207,10 +210,28 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 //
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
+        RelativeLayout rlayout = findViewById(R.id.main_layout);
+        rlayout.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mySound.play(raygunID, 1, 1, 1, 0, 1);
+                Log.d("ID suara:", String.valueOf(raygunID));
+                return false;
+            }
+
+//            @Override
+//            public void onClick(View v) {
+//                mySound.play(raygunID, 1, 1, 1, 0, 1);
+//                Log.d("ID suara:", String.valueOf(raygunID));
+//            }
+
+        });
         realtimeCount = "0";
         ButterKnife.bind(this);
 
@@ -278,6 +299,15 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
         setBookmark();
 
 
+        try
+        {
+
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         Log.d("bookmarknya@@$:", String.valueOf(tempContainers));
 // ---- new
 
@@ -320,6 +350,7 @@ public class JoinActivity extends AppCompatActivity implements OnChartValueSelec
 
                             addEntry(Integer.parseInt(y_var));
                         }else{
+
                             Toast.makeText(JoinActivity.this, "Failed to add data", Toast.LENGTH_SHORT).show();
                         }
                     }

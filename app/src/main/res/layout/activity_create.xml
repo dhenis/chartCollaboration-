@@ -27,7 +27,7 @@
         android:imeOptions="actionDone"
         android:inputType="number"
         android:text="0"
-        android:visibility="invisible" />
+         />
 
     <EditText
         android:id="@+id/editY"

@@ -207,6 +207,8 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
 
                         }else{
+
+                            Log.i("errornya: ", value);
                             Toast.makeText(CreateActivity.this, "failed to add data", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -365,6 +367,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
             public void onClick(View arg0) {
 
                 if(data != null){
+
                     entries.clear();
                     for(int i=0;i<data.getDataSetByIndex(0).getEntryCount();i++){
                         entries.add(data.getDataSetByIndex(0).getEntryForIndex(i));
@@ -556,10 +559,11 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
             // add a new x-value first
             data.addXValue(set.getEntryCount() + "");
-
             // choose a random dataSet
+
             int randomDataSetIndex = (int) (Math.random() * data.getDataSetCount());
-            System.out.println("randomDataSetIndex: "+randomDataSetIndex);
+
+            System.out.println("set.getEntryCount(): "+set.getEntryCount());
 
             // tambah dari disini dari db
             data.addEntry(new Entry((float) masukan, set.getEntryCount()) , 0); //masih off
