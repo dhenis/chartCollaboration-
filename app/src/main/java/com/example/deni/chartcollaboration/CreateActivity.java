@@ -46,6 +46,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -78,10 +79,13 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
     Button btnviewAll;
     Button btnDelete;
     SoundPool mySound;
+    SoundPool mySound2;
 
     int raygunID;
+    int raygunID2;
 
     MediaPlayer mp;
+    MediaPlayer mp2;
 
     // karena udah pake butter knife --> onclick mendjadi lebih simple
     @BindView(R.id.AccessCode) TextView AccessCode;
@@ -119,6 +123,11 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
     }
 
+    private void playmp2(float a) {
+        float volume = ((a / (mChart.getYChartMax() - mChart.getYChartMin()))*5);
+        mySound2.play(raygunID2, 1, 1, 1, 0, volume);
+
+    }
     @OnClick(R.id.button_back)
     public void create(){
         onBackPressed();
@@ -150,7 +159,9 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         btnviewAll = (Button)findViewById(R.id.button_Author);
         btnDelete= (Button)findViewById(R.id.button_delete);
         mySound = new SoundPool(6, AudioManager.STREAM_NOTIFICATION, 0);
-        raygunID = mySound.load(this, R.raw.p1, 1);
+        mySound2 = new SoundPool(1, AudioManager.STREAM_MUSIC, 100);
+        raygunID = mySound.load(this, R.raw.x2, 1);
+        raygunID2 = mySound2.load(this, R.raw.p1, 1);
 
         //mpa method
 
@@ -201,7 +212,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                         if(value.equals("1")){
                             Toast.makeText(CreateActivity.this, "Data Added", Toast.LENGTH_SHORT).show();
 
-                            addEntry(Integer.parseInt(y_var));
+                            addEntry(Integer.parseInt(y_var),Integer.parseInt(x_var));
 
                             editY.setText(""); // set after submit the internet
 
@@ -327,7 +338,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                             if(value.equals("1")){
                                 Toast.makeText(CreateActivity.this, "Data Added", Toast.LENGTH_SHORT).show();
 
-                                addEntry(Integer.parseInt(y_var));
+                                addEntry(Integer.parseInt(y_var),Integer.parseInt(x_var));
 
                                 editY.setText(""); // set after submit the internet
 
@@ -389,6 +400,9 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                         if (!mp.isPlaying()) {
 //Log.i("entires", String.valueOf(entries.get(0)));
                             playmp(entries.get(v++).getVal());
+
+
+
 //                              playmp(data.getDataSetByIndex(0).getEntryForIndex(v++).getVal());
 
 
@@ -400,9 +414,10 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                     }
                 };
                 //Starting Timer
-                timer.scheduleAtFixedRate(time, 0, 500);
+                timer.scheduleAtFixedRate(time, 100, 1500);
 
 
+                playmp(1);
 
             }
         });
@@ -456,7 +471,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
                                 JSONObject jsonObj = jsonArr.getJSONObject(i);
 
-                                addEntry(Integer.parseInt(jsonObj.getString("y")));
+                                addEntry(Integer.parseInt(jsonObj.getString("y")),Integer.parseInt(jsonObj.getString("x")));
 
                             }
 
@@ -538,11 +553,54 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
     }
 
 
+//fungsi asli masukan
+//    private void addEntry(int masukan) {
+//
+//
+//        data = mChart.getData();
+//        if(data != null) {
+////            int test = Integer.parseInt(editY.getText().toString()); masih off
+//            ILineDataSet set = data.getDataSetByIndex(0);
+//
+//            // set.addEntry(...); // can be called as well
+//
+//            if (set == null) {
+//                set = createSet(); //masih off
+//                data.addDataSet(set);
+//            }
+//
+//            // add a new x-value first
+//            data.addXValue(set.getEntryCount() + "");
+//            // choose a random dataSet
+//
+//            int randomDataSetIndex = (int) (Math.random() * data.getDataSetCount());
+//
+//            System.out.println("set.getEntryCount(): "+set.getEntryCount());
+//
+//            // tambah dari disini dari db
+//            data.addEntry(new Entry((float) masukan, set.getEntryCount()) , 0); //masih off
+//
+//            // let the chart know it's data has changed
+//            mChart.notifyDataSetChanged();
+//
+//            mChart.setVisibleXRangeMaximum(220);
+//            mChart.setVisibleYRangeMaximum(220, YAxis.AxisDependency.LEFT);
+////
+////            // this automatically refreshes the chart (calls invalidate())
+//            mChart.moveViewTo(data.getXValCount()-7, 50f, YAxis.AxisDependency.LEFT);
+//
+//            mChart.notifyDataSetChanged();
+//            mChart.invalidate();
+//
+//        }
+//    }
+
+
     // mpa lagi
 
     int[] mColors = ColorTemplate.VORDIPLOM_COLORS;
 
-    private void addEntry(int masukan) {
+    private void addEntry(int masukan,int masukanX) {
 
 
         data = mChart.getData();
@@ -556,14 +614,27 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                 set = createSet(); //masih off
                 data.addDataSet(set);
             }
+            Random rand = new Random();
+
+            int randomn = rand.nextInt(20) + 1;
+
 
             // add a new x-value first
-            data.addXValue(set.getEntryCount() + "");
+            data.addXValue(masukanX + "");
             // choose a random dataSet
+
+//            data.addXValue(set.getEntryCount() + "");
+
 
             int randomDataSetIndex = (int) (Math.random() * data.getDataSetCount());
 
+
+
             System.out.println("set.getEntryCount(): "+set.getEntryCount());
+            System.out.println("masukan x (): "+masukanX );
+            System.out.println("masukan y (): "+ masukan);
+
+
 
             // tambah dari disini dari db
             data.addEntry(new Entry((float) masukan, set.getEntryCount()) , 0); //masih off
