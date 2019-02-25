@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -46,7 +47,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -104,14 +104,14 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 
     private LineChart mChart;
 
-    private LineData data;
+   private LineData data;
 
     private ArrayList<Entry> entries = new ArrayList<Entry>();
 
     // method for mpa -------------------
 
 
-    public LineData getData(){
+    final public LineData getData(){
         return this.data;
     }
 
@@ -160,8 +160,8 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
         btnDelete= (Button)findViewById(R.id.button_delete);
         mySound = new SoundPool(6, AudioManager.STREAM_NOTIFICATION, 0);
         mySound2 = new SoundPool(1, AudioManager.STREAM_MUSIC, 100);
-        raygunID = mySound.load(this, R.raw.x2, 1);
-        raygunID2 = mySound2.load(this, R.raw.p1, 1);
+        raygunID = mySound.load(this, R.raw.p1, 1);
+        raygunID2 = mySound2.load(this, R.raw.x2, 1);
 
         //mpa method
 
@@ -399,6 +399,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                         //Perform background work here
                         if (!mp.isPlaying()) {
 //Log.i("entires", String.valueOf(entries.get(0)));
+                            // button viewall
                             playmp(entries.get(v++).getVal());
 
 
@@ -414,7 +415,7 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                     }
                 };
                 //Starting Timer
-                timer.scheduleAtFixedRate(time, 100, 1500);
+                timer.scheduleAtFixedRate(time, 100, 500);
 
 
                 playmp(1);
@@ -614,9 +615,9 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
                 set = createSet(); //masih off
                 data.addDataSet(set);
             }
-            Random rand = new Random();
-
-            int randomn = rand.nextInt(20) + 1;
+//            Random rand = new Random();
+//
+//            int randomn = rand.nextInt(20) + 1;
 
 
             // add a new x-value first
@@ -626,13 +627,14 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
 //            data.addXValue(set.getEntryCount() + "");
 
 
-            int randomDataSetIndex = (int) (Math.random() * data.getDataSetCount());
-
+//            int randomDataSetIndex = (int) (Math.random() * data.getDataSetCount());
+//
 
 
             System.out.println("set.getEntryCount(): "+set.getEntryCount());
             System.out.println("masukan x (): "+masukanX );
             System.out.println("masukan y (): "+ masukan);
+            System.out.println("getXVals() (): "+ data.getXVals());
 
 
 
@@ -773,13 +775,43 @@ public class CreateActivity extends AppCompatActivity implements OnChartValueSel
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
 
-        float volume= ((e.getVal()/(mChart.getYChartMax()-mChart.getYChartMin()))*5);
+        Log.d("getXindex()", String.valueOf(h.getXIndex()));
+        Log.d("getDataSetIndex()", String.valueOf(h.getDataSetIndex()));
+        Log.d("e.getXIndex()", String.valueOf(e.getXIndex()));
+        Log.d("e.getData()", String.valueOf(e.getData()));
+        Log.d("e.getval()", String.valueOf(e.getVal()));
+        Log.d("mChart.getX()", String.valueOf(mChart.getX()));
+        Log.d("mChart.getY()", String.valueOf(mChart.getY()));
+        Log.d("mChart.getXValue()", String.valueOf(mChart.getXValue(e.getXIndex())));
+//        Log.d("mChart.getY()", String.valueOf(mChart.getY(e.getXIndex())));
+
+        final float volume= ((e.getVal()/(mChart.getYChartMax()-mChart.getYChartMin()))*5);
+
+        final float volume2= ((Integer.parseInt(mChart.getXValue(e.getXIndex())) /(mChart.getYChartMax()-mChart.getYChartMin()))*5);
+
+
+        Log.d("Volume = ", String.valueOf(volume));
+        Log.d("Volume2 = ", String.valueOf(volume2));
+
 
 
         mySound.play(raygunID, 1, 1, 1, 0, volume);
 
+        // delay for a while before playing second tone
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mySound.play(raygunID2, 1, 1, 1, 0, volume2);
+            }
+        }, 300);
+
+
 
     }
+
+
 
     @Override
     public void onNothingSelected() {
